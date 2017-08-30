@@ -1,20 +1,16 @@
 // See http://docs.sequelizejs.com/en/latest/docs/models-definition/
 // for more of what you can do here.
 const Sequelize = require('sequelize');
-const DataTypes = Sequelize.DataTypes;
 
 module.exports = function (app) {
   const sequelizeClient = app.get('sequelizeClient');
-  const projects = sequelizeClient.define('projects', {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true
+  const participations = sequelizeClient.define('participations', {
+    username: {
+      type: Sequelize.STRING,
+      allowNull: false
     },
-    header: DataTypes.STRING,
-    text: DataTypes.TEXT,
-    creator: {
-      type: DataTypes.STRING,
+    projectId: {
+      type: Sequelize.INTEGER,
       allowNull: false
     }
   }, {
@@ -25,10 +21,10 @@ module.exports = function (app) {
     }
   });
 
-  projects.associate = function (models) { // eslint-disable-line no-unused-vars
+  participations.associate = function (models) { // eslint-disable-line no-unused-vars
     // Define associations here
     // See http://docs.sequelizejs.com/en/latest/docs/associations/
   };
 
-  return projects;
+  return participations;
 };

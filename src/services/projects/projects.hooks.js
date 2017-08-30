@@ -1,6 +1,6 @@
 const {authenticate} = require('feathers-authentication').hooks;
 
-const {restrictToOwner, restrictToAuthenticated, associateCurrentUser}
+const {restrictToOwner, associateCurrentUser}
   = require('feathers-authentication-hooks');
 
 
@@ -18,7 +18,7 @@ module.exports = {
     all: [],
     find: [],
     get: [],
-    create: [restrictToAuthenticated(), associateCurrentUser({
+    create: [authenticate('jwt'), associateCurrentUser({
       idField: 'username',
       as: 'creator'
     })],
