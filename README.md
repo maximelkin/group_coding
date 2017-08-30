@@ -1,8 +1,4 @@
-# Feathers Webpack and React
-This is a simple boilerplate to help you get started with Feathers Webpack and React. Hot reload is enabled. Start the project with:
+# group coding
 
-```
-npm start
-```
-
-Contributions and/or questions are always welcome.
+thanks to sscaff1 for boilerplate
+(https://github.com/sscaff1/feathers-webpack-react)
