@@ -41,7 +41,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(favicon(path.join(app.get('public'), 'favicon.ico')));
 // Host the public folder
-app.use('/', feathers.static(app.get('public')));
 
 // Set up Plugins and providers
 app.configure(hooks());
@@ -56,6 +55,8 @@ app.configure(middleware);
 app.configure(authentication);
 // Set up our services (see `services/index.js`)
 app.configure(services);
+app.use(feathers.static(app.get('public')));
+
 // Configure a middleware for 404s and the error handler
 app.use(notFound());
 app.use(handler());
