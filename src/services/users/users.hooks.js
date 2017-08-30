@@ -1,5 +1,5 @@
 const {authenticate} = require('feathers-authentication').hooks;
-const commonHooks = require('feathers-hooks-common');
+const {commonHooks} = require('feathers-hooks-common');
 const {restrictToOwner} = require('feathers-authentication-hooks');
 const {hashPassword} = require('feathers-authentication-local').hooks;
 
@@ -14,7 +14,7 @@ const restrict = [
 module.exports = {
   before: {
     all: [],
-    find: [],
+    find: [commonHooks.removeQuery('password', 'body')],
     get: [],
     create: [hashPassword()],
     update: [...restrict, hashPassword()],

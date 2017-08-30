@@ -3,6 +3,8 @@ const {authenticate} = require('feathers-authentication').hooks;
 const {restrictToOwner, associateCurrentUser}
   = require('feathers-authentication-hooks');
 
+const {commonHooks} = require('feathers-hooks-common');
+
 
 const updateRestrictions = [
   authenticate('jwt'),
@@ -16,7 +18,7 @@ const updateRestrictions = [
 module.exports = {
   before: {
     all: [],
-    find: [],
+    find: [commonHooks.removeQuery('text')],
     get: [],
     create: [authenticate('jwt'), associateCurrentUser({
       idField: 'username',

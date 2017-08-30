@@ -18,6 +18,11 @@ module.exports = function (app) {
       allowNull: false
     },
 
+    body: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    }
+
   }, {
     hooks: {
       beforeCount(options) {

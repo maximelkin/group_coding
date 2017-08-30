@@ -18,7 +18,6 @@ module.exports = {
   before: {
     all: [],
     find: [],
-    get: [],
     create: [authenticate('jwt'), isProjectCreator],
     //checks if is project creator or this participation about him
     remove: [authenticate('jwt'), some(restrictToOwner({
