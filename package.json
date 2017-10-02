@@ -46,8 +46,8 @@
     "feathers-socketio": "^2.0.0",
     "helmet": "^3.8.1",
     "pg": "^7.2.0",
-    "react": "^15.6.1",
-    "react-dom": "^15.6.1",
+    "react": "^16",
+    "react-dom": "^16",
     "sequelize": "^4.8.0",
     "serve-favicon": "^2.4.3",
     "winston": "^2.3.1"
