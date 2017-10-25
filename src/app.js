@@ -1,66 +1,51 @@
-const path = require('path');
-const favicon = require('serve-favicon');
-const compress = require('compression');
-// const cors = require('cors');
-const helmet = require('helmet');
-const bodyParser = require('body-parser');
-const webpack = require('webpack');
-const webpackMiddleware = require('webpack-dev-middleware');
-const webpackHotMiddleware = require('webpack-hot-middleware');
-
-const feathers = require('feathers');
-const configuration = require('feathers-configuration');
-const hooks = require('feathers-hooks');
-const rest = require('feathers-rest');
-// const socketio = require('feathers-socketio');
-
-const handler = require('feathers-errors/handler');
-const notFound = require('feathers-errors/not-found');
-
-const middleware = require('./middleware');
-const services = require('./services');
-const appHooks = require('./app.hooks');
-const webpackConfig = require('../webpack.config');
-
-const authentication = require('./authentication');
-
-const sequelize = require('./sequelize');
-
-const app = feathers();
-const compiler = webpack(webpackConfig);
-
-app.use(webpackMiddleware(compiler));
-app.use(webpackHotMiddleware(compiler));
-// Load app configuration
-app.configure(configuration());
-// Enable CORS, security, compression, favicon and body parsing
-// app.use(cors());
-app.use(helmet());
-app.use(compress());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(favicon(path.join(app.get('public'), 'favicon.ico')));
-// Host the public folder
-
-// Set up Plugins and providers
-app.configure(hooks());
-app.configure(sequelize);
-app.configure(rest());
-
-// disabled, maybe later
-// app.configure(socketio());
-
-// Configure other middleware (see `middleware/index.js`)
-app.configure(middleware);
-app.configure(authentication);
-// Set up our services (see `services/index.js`)
-app.configure(services);
-app.use(feathers.static(app.get('public')));
-
-// Configure a middleware for 404s and the error handler
-app.use(notFound());
-app.use(handler());
-
-app.hooks(appHooks);
-
-module.exports = app;
+'use strict';
+Object.defineProperty(exports, "__esModule", { value: true });
+require("reflect-metadata");
+const path = require("path");
+const jwt = require("jsonwebtoken");
+const routing_controllers_1 = require("routing-controllers");
+const typeorm_1 = require("typeorm");
+const typedi_1 = require("typedi");
+const User_1 = require("./entity/User");
+const morgan = require("morgan");
+const express = require("express");
+const bodyParser = require("body-parser");
+const debug = require("debug");
+const config = require('../config.json');
+routing_controllers_1.useContainer(typedi_1.Container);
+typeorm_1.useContainer(typedi_1.Container);
+typeorm_1.createConnection()
+    .catch(err => console.error(err));
+const app = routing_controllers_1.createExpressServer({
+    routePrefix: '/api',
+    middlewares: [
+        morgan('dev'),
+        express.static(path.join('..', 'build/')),
+        bodyParser.json(),
+        bodyParser.urlencoded({ extended: false })
+    ],
+    controllers: [path.join(__dirname, '/controllers', '/*.js')],
+    currentUserChecker: async (action) => {
+        const token = action.request.headers.authorization;
+        try {
+            return new Promise((resolve, reject) => {
+                jwt.verify(token, config.token, {}, (err, decoded) => {
+                    if (err) {
+                        debug('app').log(err);
+                        return reject(err);
+                    }
+                    resolve(decoded);
+                });
+            }).then((decoded) => {
+                return typeorm_1.getConnectionManager()
+                    .get()
+                    .getRepository(User_1.User)
+                    .findOneById(decoded.username);
+            });
+        }
+        catch (e) {
+            return null;
+        }
+    }
+});
+app.listen(3000);
