@@ -40,7 +40,8 @@
     "serve-favicon": "^2.4.5",
     "typedi": "^0.5.2",
     "typeorm": "^0.1.1",
-    "typeorm-typedi-extensions": "^0.1.0"
+    "typeorm-typedi-extensions": "^0.1.0",
+    "webpack-cli": "^2.0.9"
   },
   "devDependencies": {
     "@types/bcryptjs": "~2.4.1",
