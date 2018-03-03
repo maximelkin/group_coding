@@ -7,6 +7,6 @@ export class Tag {
     @PrimaryColumn()
     public name: string
 
-    @ManyToMany(type => Project, project => project.tags)
+    @ManyToMany(() => Project, project => project.tags)
     public projects: Project[]
 }

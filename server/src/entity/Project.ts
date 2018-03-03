@@ -14,14 +14,14 @@ export class Project {
     @Column({type: 'text'})
     public text: string
 
-    @ManyToOne(type => User, creator => creator.createdProjects)
+    @ManyToOne(() => User, creator => creator.createdProjects)
     public creator: User
 
-    @ManyToMany(type => User, user => user.projects)
+    @ManyToMany(() => User, user => user.projects)
     @JoinTable()
     public participants: User[]
 
-    @ManyToMany(type => Tag, tag => tag.projects)
+    @ManyToMany(() => Tag, tag => tag.projects)
     @JoinTable({
         name: 'projectsTags',
         joinColumn: {

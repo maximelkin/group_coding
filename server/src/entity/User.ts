@@ -13,9 +13,9 @@ export class User {
     @Column()
     public password: string
 
-    @OneToMany(type => Project, project => project.creator)
+    @OneToMany(() => Project, project => project.creator)
     public createdProjects: Project[]
 
-    @ManyToMany(type => Project, project => project.participants)
+    @ManyToMany(() => Project, project => project.participants)
     public projects: Project[]
 }
