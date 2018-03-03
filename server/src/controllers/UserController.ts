@@ -27,7 +27,7 @@ export class UserController {
                 }
                 return result
             })
-            .then(result => new Promise((resolve, reject) =>
+            .then(() => new Promise((resolve, reject) =>
                 sign({username}, config.token, {}, (err: Error, token) => {
                     if (err) {
                         return reject(err)
