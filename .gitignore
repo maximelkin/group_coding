@@ -1,3 +1,7 @@
-.idea/
-.vscode/
+# Common
+node_modules/
+yarn-error.log
+build/
+
+# Server
 temp/
