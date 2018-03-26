@@ -1,5 +1,7 @@
-import {Column, Entity, PrimaryColumn, OneToMany, ManyToMany} from 'typeorm'
+import {Column, Entity, PrimaryColumn, OneToMany} from 'typeorm'
 import {Project} from './Project'
+import {Placement} from './Placement'
+import {ParticipationRequest} from './ParticipationRequest'
 
 @Entity()
 export class User {
@@ -16,6 +18,9 @@ export class User {
     @OneToMany(() => Project, project => project.creator)
     public createdProjects: Project[]
 
-    @ManyToMany(() => Project, project => project.participants)
-    public projects: Project[]
+    @OneToMany(() => Placement, placement => placement.user)
+    public placements: Placement[]
+
+    @OneToMany(() => ParticipationRequest, participationRequest => participationRequest.user)
+    public participationRequests: ParticipationRequest[]
 }

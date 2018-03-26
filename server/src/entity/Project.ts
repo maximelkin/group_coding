@@ -1,6 +1,6 @@
-import {Column, Entity, PrimaryGeneratedColumn, ManyToOne, ManyToMany, JoinTable} from 'typeorm'
+import {Column, Entity, PrimaryGeneratedColumn, ManyToOne, OneToMany, JoinColumn} from 'typeorm'
 import {User} from './User'
-import {Tag} from './Tag'
+import {Placement} from './Placement'
 
 @Entity()
 export class Project {
@@ -15,21 +15,12 @@ export class Project {
     public text: string
 
     @ManyToOne(() => User, creator => creator.createdProjects)
+    @JoinColumn()
     public creator: User
 
-    @ManyToMany(() => User, user => user.projects)
-    @JoinTable()
-    public participants: User[]
-
-    @ManyToMany(() => Tag, tag => tag.projects)
-    @JoinTable({
-        name: 'projectsTags',
-        joinColumn: {
-            name: 'projectId'
-        },
-        inverseJoinColumn: {
-            name: 'tagName'
-        }
+    @OneToMany(() => Placement, placement => placement.project, {
+        cascadeInsert: true,
+        cascadeUpdate: true,
     })
-    public tags: Tag[]
+    public placements: Placement[]
 }
