@@ -2,7 +2,7 @@
   "name": "synergy-teams",
   "description": "fun pet-project",
   "version": "0.0.1",
-  "homepage": "",
+  "homepage": "https://github.com/maximelkin/synergyTeams",
   "main": "src",
   "author": {
     "name": "Maxim Eljkin",
@@ -15,11 +15,10 @@
     "url": "https://github.com/maximelkin/synergyTeams/issues"
   },
   "engines": {
-    "node": ">= ^8.0.0",
     "yarn": ">= 1.2.1"
   },
   "scripts": {
-    "start": "cd src/ && node src/app.js"
+    "start": "cd src/ && node app.ts"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
