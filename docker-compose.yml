@@ -1,7 +1,16 @@
 version: 3
 
-# todo postgres, nginx, redis
+# todo nginx
 services:
   server:
     build: ./server
     init: true
+  postgres:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+    network_mode: "service:server"
+    volumes:
+      - "/var/lib:/var/lib/postgresql/data"
