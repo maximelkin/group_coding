@@ -12,6 +12,9 @@ export class Placement {
     public name: string
 
     @Column()
+    public projectId: number
+
+    @Column()
     @ManyToOne(() => Project, project => project.placements)
     @JoinColumn()
     public project: Project
@@ -25,6 +28,9 @@ export class Placement {
     @JoinColumn()
     public user: User | null
 
-    @OneToMany(() => ParticipationRequest, participationRequest => participationRequest.placement)
+    @OneToMany(() => ParticipationRequest, participationRequest => participationRequest.placement, {
+        cascadeUpdate: true,
+        cascadeInsert: true,
+    })
     public participationRequests: ParticipationRequest[]
 }

@@ -6,7 +6,7 @@ import {Placement} from '../entity/Placement'
 import {ParticipationRequest} from '../entity/ParticipationRequest'
 
 const authenticatedUserRouter = new Router()
-    .use('/*', async (ctx, next) => {
+    .use((ctx, next) => {
         if (!ctx.isAuthenticated()) {
             return ctx.throw(401)
         }
@@ -67,7 +67,7 @@ export const userRouter = new Router()
             })
     })
     .post('/', async ctx => {
-        const {username, password} = ctx.body
+        const {username, password} = ctx.request.body
         const hashedPassword = await hash(password, 12)
         await getRepository(User)
             .insert({username, password: hashedPassword})

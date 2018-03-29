@@ -14,6 +14,9 @@ export class Project {
     @Column({type: 'text'})
     public text: string
 
+    @Column()
+    public creatorId: string
+
     @ManyToOne(() => User, creator => creator.createdProjects)
     @JoinColumn()
     public creator: User

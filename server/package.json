@@ -29,7 +29,7 @@
     "bcryptjs": "~2.4.3",
     "bluebird": "~3.5.1",
     "pg": "~7.4.1",
-    "typeorm": "~0.1.18",
+    "typeorm": "~0.1.19",
     "reflect-metadata": "~0.1.12"
   },
   "devDependencies": {
@@ -40,9 +40,9 @@
     "@types/koa-passport": "^4.0.1",
     "@types/koa-router": "^7.0.27",
     "@types/koa-session": "^5.7.1",
-    "@types/node": "^9.6.0",
+    "@types/node": "^9.6.1",
     "@types/passport-local": "^1.0.32",
     "typescript": "~2.7.2",
-    "tslint": "~5.9.1"
+    "tslint": "^5.9.1"
   }
 }

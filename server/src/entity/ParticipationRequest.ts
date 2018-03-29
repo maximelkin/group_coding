@@ -7,6 +7,10 @@ export class ParticipationRequest {
     @PrimaryGeneratedColumn()
     public id: number
 
+    // hack, get placementId without join
+    @Column()
+    public placementId: number
+
     @Column()
     @ManyToOne(() => Placement, placement => placement.participationRequests)
     @JoinColumn()
@@ -16,4 +20,9 @@ export class ParticipationRequest {
     @ManyToOne(() => User, user => user.participationRequests)
     @JoinColumn()
     public user: User
+
+    @Column('bool', {
+        default: false,
+    })
+    public declined: boolean
 }
