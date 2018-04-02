@@ -76,7 +76,9 @@ export const projectRouter = new Router()
 
         const projectRepository = getRepository(Project)
 
-        let project = await projectRepository.findOneById(id)
+        let project = await projectRepository.findOneById(id, {
+            relations: ['placements']
+        })
 
         if (!project) {
             return ctx.throw(404)
