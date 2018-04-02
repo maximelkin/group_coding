@@ -23,7 +23,7 @@ const authenticatedUserRouter = new Router()
                 password: hashed,
             })
     })
-    .post('/participate/:id', async ctx => {
+    .post('/participate/:placementId', async ctx => {
         const {placementId} = ctx.params
         const placement = await getRepository(Placement)
             .findOneById(placementId)
