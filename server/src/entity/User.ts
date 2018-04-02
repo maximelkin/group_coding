@@ -13,6 +13,9 @@ export class User {
     public body: string
 
     @Column()
+    public email: string
+
+    @Column()
     public password: string
 
     @OneToMany(() => Project, project => project.creator)

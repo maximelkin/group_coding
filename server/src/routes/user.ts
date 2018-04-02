@@ -62,14 +62,21 @@ export const userRouter = new Router()
     .get('/:username', async ctx => {
 
         const relations = ['createdProjects', 'placements']
+        const selectColumns: Array<keyof User> = [
+            'username',
+            'body',
+            'createdProjects',
+            'placements'
+        ]
 
         if (ctx.session && ctx.session.username === ctx.params.username) {
             relations.push('participationRequests')
+            selectColumns.push('participationRequests', 'email')
         }
 
         ctx.body = await getRepository(User)
             .findOneById(ctx.params.username, {
-                select: ['username', 'body', 'createdProjects', 'placements', 'participationRequests'],
+                select: selectColumns,
                 relations
             })
     })
