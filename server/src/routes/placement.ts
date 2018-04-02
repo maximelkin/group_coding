@@ -21,11 +21,13 @@ export const placementRouter = new Router()
                 relations: ['placements']
             })
         if (!project) {
-            return ctx.throw(400, 'no such project')
+            return ctx.throw(404)
         }
+
         if (project.creatorId !== ctx.session!.username) {
-            return ctx.throw(403, 'not project manager')
+            return ctx.throw(403, 'not a project manager')
         }
+
         project.placements.push(...placements.map(name => {
             const placement = new Placement()
             placement.name = name
@@ -123,7 +125,7 @@ export const placementRouter = new Router()
             })
 
         if (!project) {
-            return ctx.throw(400, 'no such project')
+            return ctx.throw(404)
         }
 
         if (project.creatorId !== ctx.session!.username) {

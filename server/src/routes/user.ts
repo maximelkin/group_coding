@@ -29,7 +29,7 @@ const authenticatedUserRouter = new Router()
             .findOneById(placementId)
 
         if (!placement) {
-            return ctx.throw(400, 'no such placement')
+            return ctx.throw(404)
         }
 
         const user = ctx.session as any as User
@@ -46,7 +46,7 @@ const authenticatedUserRouter = new Router()
             .findOneById(ctx.params.id)
 
         if (!participationRequest) {
-            return ctx.throw(400, 'no such participation request')
+            return ctx.throw(404)
         }
 
         // ctx.session is not undefined because previously we checked what user authenticated
@@ -60,10 +60,17 @@ const authenticatedUserRouter = new Router()
 export const userRouter = new Router()
     .prefix('/user')
     .get('/:username', async ctx => {
+
+        const relations = ['createdProjects', 'placements']
+
+        if (ctx.session && ctx.session.username === ctx.params.username) {
+            relations.push('participationRequests')
+        }
+
         ctx.body = await getRepository(User)
             .findOneById(ctx.params.username, {
                 select: ['username', 'body', 'createdProjects', 'placements', 'participationRequests'],
-                relations: ['createdProjects', 'placements', 'participationRequests']
+                relations
             })
     })
     .post('/', async ctx => {

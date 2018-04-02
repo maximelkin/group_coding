@@ -18,7 +18,7 @@ export const participationRouter = new Router()
             .findOneById(placementId)
 
         if (!placement) {
-            return ctx.throw(400, 'no such placement')
+            return ctx.throw(404)
         }
 
         const user = ctx.session as any as User
@@ -35,12 +35,13 @@ export const participationRouter = new Router()
             .findOneById(ctx.params.id)
 
         if (!participationRequest) {
-            return ctx.throw(400, 'no such participation request')
+            return ctx.throw(404)
         }
 
         if (participationRequest.user.username !== ctx.session!.username) {
             return ctx.throw(403, 'wrong user')
         }
+
         await getRepository(ParticipationRequest)
             .remove(participationRequest)
     })

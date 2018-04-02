@@ -34,7 +34,7 @@ const authenticatedProjectRouter = new Router()
             .findOneById(ctx.params.projectId)
 
         if (!project) {
-            return ctx.throw(400, 'no such project')
+            return ctx.throw(404)
         }
 
         if (user.username !== project.creator.username) {
@@ -52,7 +52,7 @@ const authenticatedProjectRouter = new Router()
             .findOneById(ctx.params.projectId)
 
         if (!project) {
-            return ctx.throw(400, 'no such project')
+            return ctx.throw(404)
         }
 
         if (user.username !== project.creator.username) {
@@ -65,14 +65,29 @@ const authenticatedProjectRouter = new Router()
 
 export const projectRouter = new Router()
     .prefix('/project')
-    .get('/', ctx => {
+    .get('/', async ctx => {
         const {from = 0, limit = 10} = ctx.request.query
-        return getRepository(Project)
+
+        ctx.body = await getRepository(Project)
             .find({take: limit, skip: from})
     })
-    .get('/:id', ctx => {
+    .get('/:id', async ctx => {
         const id = ctx.params.id
-        return getRepository(Project)
-            .findOneById(id)
+
+        const projectRepository = getRepository(Project)
+
+        let project = await projectRepository.findOneById(id)
+
+        if (!project) {
+            return ctx.throw(404)
+        }
+
+        if (ctx.session && project.creatorId === ctx.session.username) {
+            // if project creator - add participation requests
+            project = await projectRepository.findOneById(id, {
+                relations: ['placements', 'placements.participationRequests']
+            })
+        }
+        ctx.body = project
     })
     .use(authenticatedProjectRouter.routes(), authenticatedProjectRouter.allowedMethods())
