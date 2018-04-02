@@ -1,17 +1,19 @@
 FROM node:alpine
 
 COPY package*.json ./
-RUN npm ci
+RUN yarn install --production
 
 COPY . .
 # replace ormconfig with special version for docker
 COPY docker-ormconfig.json ./ormconfig.json
 
-RUN npm run build
+RUN yarn run build
 
 ENV NODE_ENV=production
+ENV PORT=8080
+
 USER node
 
-EXPOSE 3000
+EXPOSE 8080
 
 CMD ["npm", "start"]
