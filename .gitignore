@@ -5,3 +5,7 @@ build/
 
 # Server
 temp/
+
+# editors
+.idea/
+.vscode/

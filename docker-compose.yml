@@ -1,0 +1,7 @@
+version: 3
+
+# todo postgres, nginx, redis
+services:
+  server:
+    build: ./server
+    init: true
