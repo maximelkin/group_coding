@@ -44,8 +44,8 @@ export const placementRouter = new Router()
     })
     .put('/', async ctx => {
         const placementUpdates: Array<{
-            accept?: number     // id of placement
-            decline?: number[]  // ids of placements
+            accept?: number     // id of participationRequest
+            decline?: number[]  // ids of participationRequests
             name?: string
             id: number          // placement id
         }>

@@ -13,6 +13,7 @@ const authenticatedProjectRouter = new Router()
     })
     .post('/', ctx => {
         const {header, text} = ctx.request.body
+
         const user = ctx.session as any as User
         const project = new Project()
         project.header = header

@@ -14,6 +14,9 @@ export const participationRouter = new Router()
     })
     .post('/', async ctx => {
         const {placementId} = ctx.request.body
+
+        ctx.assert.notEqual(typeof placementId, 'object', 400)
+
         const placement = await getRepository(Placement)
             .findOneById(placementId)
 
@@ -31,6 +34,7 @@ export const participationRouter = new Router()
             .save(participationRequest)
     })
     .delete('/:id', async ctx => {
+
         const participationRequest = await getRepository(ParticipationRequest)
             .findOneById(ctx.params.id)
 
