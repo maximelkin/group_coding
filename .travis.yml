@@ -1,0 +1,21 @@
+dist: trusty
+
+language: node_js
+node_js:
+  - "9"
+
+services:
+  - postgresql
+
+cache:
+  yarn: true
+
+before_script:
+  - psql -c 'create database synergy;' -U postgres
+
+script:
+  - yarn run lint
+  - yarn run build
+  - yarn run start &  # in background
+  - sleep 1           # wait for startup
+  - yarn run test
