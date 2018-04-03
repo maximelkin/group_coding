@@ -18,7 +18,8 @@
     "object-literal-sort-keys": false,
     "space-before-function-paren": false,
     "no-var-requires": false,
-    "no-console": false
+    "no-console": false,
+    "no-implicit-dependencies": ["dev"]
   },
   "rulesDirectory": []
 }
