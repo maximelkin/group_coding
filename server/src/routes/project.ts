@@ -1,6 +1,4 @@
 import * as Router from 'koa-router'
-import {getRepository} from 'typeorm'
-import {Project} from '../entity/Project'
 import {placementRouter} from './placement'
 import {projectController} from '../controllers/project'
 import {projectValidator} from '../validators/project'
@@ -54,8 +52,7 @@ export const projectRouter = new Router()
         ctx.assert.equal(typeof from, 'number', 400)
         ctx.assert.equal(typeof limit, 'number', 400)
 
-        ctx.body = await getRepository(Project)
-            .find({take: limit, skip: from})
+        await projectController.readMany(ctx, {from, limit})
     })
     .get('/:projectId', async ctx => {
         const projectId = parseInt(ctx.params.projectId, 10)

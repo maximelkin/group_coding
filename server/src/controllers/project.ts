@@ -4,7 +4,7 @@ import {User} from '../entity/User'
 import {Context} from 'koa'
 
 export const projectController = {
-    async create(ctx: Context, user: User, {header, text}: {header: string, text: string}) {
+    async create(ctx: Context, user: User, {header, text}: { header: string, text: string }) {
         const project = new Project()
         project.header = header
         project.text = text
@@ -13,6 +13,11 @@ export const projectController = {
         const projectSaved = await getRepository(Project)
             .save(project)
         ctx.body = projectSaved.id
+    },
+
+    async readMany(ctx: Context, {from, limit}: { from: number, limit: number }) {
+        ctx.body = await getRepository(Project)
+            .find({take: limit, skip: from})
     },
 
     async read(ctx: Context, user: User | undefined, projectId: number) {
@@ -35,7 +40,7 @@ export const projectController = {
         ctx.body = project
     },
 
-    async update(ctx: Context, user: User, projectId: number, {header, text}: {header?: string, text?: string}) {
+    async update(ctx: Context, user: User, projectId: number, {header, text}: { header?: string, text?: string }) {
         const projectRepository = getRepository(Project)
         const project = await projectRepository
             .findOneById(projectId)
