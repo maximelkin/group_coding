@@ -1,8 +1,6 @@
 import * as Router from 'koa-router'
-import {ParticipationRequest} from '../entity/ParticipationRequest'
-import {getRepository} from 'typeorm'
-import {Placement} from '../entity/Placement'
-import {User} from '../entity/User'
+import {participationController} from '../controllers/participation'
+import {commonValidator} from '../validators/common'
 
 export const participationRouter = new Router()
     .prefix('/participation')
@@ -13,39 +11,16 @@ export const participationRouter = new Router()
         return next()
     })
     .post('/', async ctx => {
-        const {placementId} = ctx.request.body
+        const placementId = parseInt(ctx.request.body.placementId, 10)
 
-        ctx.assert.notEqual(typeof placementId, 'object', 400)
+        ctx.assert(commonValidator.nonNegativeNumber(placementId), 400, 'wrong placement id')
 
-        const placement = await getRepository(Placement)
-            .findOneById(placementId)
-
-        if (!placement) {
-            return ctx.throw(404)
-        }
-
-        const user = ctx.session as any as User
-
-        const participationRequest = new ParticipationRequest()
-        participationRequest.user = user
-        participationRequest.placement = placement
-
-        return getRepository(ParticipationRequest)
-            .save(participationRequest)
+        await participationController.create(ctx, placementId, ctx.session!)
     })
     .delete('/:id', async ctx => {
+        const participationRequestId = parseInt(ctx.params.id, 10)
 
-        const participationRequest = await getRepository(ParticipationRequest)
-            .findOneById(ctx.params.id)
+        ctx.assert(commonValidator.nonNegativeNumber(participationRequestId), 400, 'wrong placement id')
 
-        if (!participationRequest) {
-            return ctx.throw(404)
-        }
-
-        if (participationRequest.user.username !== ctx.session!.username) {
-            return ctx.throw(403, 'wrong user')
-        }
-
-        await getRepository(ParticipationRequest)
-            .remove(participationRequest)
+        await participationController.delete(ctx, participationRequestId, ctx.session!)
     })

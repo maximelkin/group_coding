@@ -19,7 +19,8 @@
     "space-before-function-paren": false,
     "no-var-requires": false,
     "no-console": false,
-    "no-implicit-dependencies": ["dev"]
+    "no-implicit-dependencies": ["dev"],
+    "no-empty-interface": false
   },
   "rulesDirectory": []
 }

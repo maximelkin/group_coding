@@ -4,6 +4,12 @@ import {User} from './entity/User'
 import {getRepository} from 'typeorm'
 import {compare} from 'bcryptjs'
 
+declare module 'koa-session' {
+    // noinspection JSUnusedGlobalSymbols
+    interface Session extends User {
+    }
+}
+
 const userRepository = getRepository(User)
 passport.serializeUser((user: User, done) => {
     done(null, user.username)

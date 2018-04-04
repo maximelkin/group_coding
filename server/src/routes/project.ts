@@ -1,8 +1,10 @@
 import * as Router from 'koa-router'
 import {getRepository} from 'typeorm'
 import {Project} from '../entity/Project'
-import {User} from '../entity/User'
 import {placementRouter} from './placement'
+import {projectController} from '../controllers/project'
+import {projectValidator} from '../validators/project'
+import {commonValidator} from '../validators/common'
 
 const authenticatedProjectRouter = new Router()
     .use((ctx, next) => {
@@ -11,17 +13,13 @@ const authenticatedProjectRouter = new Router()
         }
         return next()
     })
-    .post('/', ctx => {
+    .post('/', async ctx => {
         const {header, text} = ctx.request.body
 
-        const user = ctx.session as any as User
-        const project = new Project()
-        project.header = header
-        project.text = text
-        project.creator = user
+        ctx.assert(projectValidator.header(header), 400, 'wrong new header')
+        ctx.assert(projectValidator.text(text), 400, 'wrong new text')
 
-        return getRepository(Project)
-            .save(project)
+        await projectController.create(ctx, ctx.session!, {header, text})
     })
     .put('/:projectId', async ctx => {
         const {header, text}: {
@@ -29,38 +27,22 @@ const authenticatedProjectRouter = new Router()
             text?: string,
         } = ctx.request.body
 
-        const user = ctx.session as any as User
-        const projectRepository = getRepository(Project)
-        const project = await projectRepository
-            .findOneById(ctx.params.projectId)
+        const user = ctx.session!
+        const projectId = parseInt(ctx.params.projectId, 10)
 
-        if (!project) {
-            return ctx.throw(404)
-        }
+        ctx.assert(commonValidator.nonNegativeNumber(projectId), 400, 'wrong project id')
 
-        if (user.username !== project.creator.username) {
-            return ctx.throw(403, 'not creator of project')
-        }
-        project.header = header === undefined ? project.header : header
-        project.text = text === undefined ? project.text : text
+        ctx.assert(!header || projectValidator.header(header), 400, 'wrong new header')
+        ctx.assert(!text || projectValidator.text(text), 400, 'wrong new text')
 
-        await projectRepository.save(project)
+        await projectController.update(ctx, user, projectId, {header, text})
     })
     .delete('/:projectId', async ctx => {
-        const user = ctx.session as any as User
-        const projectsRepository = getRepository(Project)
-        const project = await projectsRepository
-            .findOneById(ctx.params.projectId)
+        const projectId = parseInt(ctx.params.projectId, 10)
 
-        if (!project) {
-            return ctx.throw(404)
-        }
+        ctx.assert(commonValidator.nonNegativeNumber(projectId), 400, 'wrong project id')
 
-        if (user.username !== project.creator.username) {
-            return ctx.throw(403, 'not creator of project')
-        }
-
-        await projectsRepository.deleteById(project.id)
+        await projectController.delete(ctx, ctx.session!, projectId)
     })
     .use('/:projectId', placementRouter.routes(), placementRouter.allowedMethods())
 
@@ -69,28 +51,17 @@ export const projectRouter = new Router()
     .get('/', async ctx => {
         const {from = 0, limit = 10} = ctx.request.query
 
+        ctx.assert.equal(typeof from, 'number', 400)
+        ctx.assert.equal(typeof limit, 'number', 400)
+
         ctx.body = await getRepository(Project)
             .find({take: limit, skip: from})
     })
-    .get('/:id', async ctx => {
-        const id = ctx.params.id
+    .get('/:projectId', async ctx => {
+        const projectId = parseInt(ctx.params.projectId, 10)
 
-        const projectRepository = getRepository(Project)
+        ctx.assert(commonValidator.nonNegativeNumber(projectId), 400, 'wrong project id')
 
-        let project = await projectRepository.findOneById(id, {
-            relations: ['placements']
-        })
-
-        if (!project) {
-            return ctx.throw(404)
-        }
-
-        if (ctx.session && project.creatorId === ctx.session.username) {
-            // if project creator - add participation requests
-            project = await projectRepository.findOneById(id, {
-                relations: ['placements', 'placements.participationRequests']
-            })
-        }
-        ctx.body = project
+        await projectController.read(ctx, ctx.session, projectId)
     })
     .use(authenticatedProjectRouter.routes(), authenticatedProjectRouter.allowedMethods())
