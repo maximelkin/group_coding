@@ -3,5 +3,5 @@ import koaPassport = require('koa-passport')
 
 export const authenticationRouter = new Router()
     .prefix('/authentication')
-    .get('/local', koaPassport.authenticate('local'))
+    .post('/local', koaPassport.authenticate('local'))
     .get('/logout', ctx => ctx.logout())
