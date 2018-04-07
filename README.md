@@ -4,6 +4,6 @@
 ## Motivation🔥
 We create a service for beginners who want to contribute to the open source 
 ## Roadmap
-Lots coming soon, check out the [roadmap]() 👨‍💻
+Lots coming soon, check out the [roadmap](https://github.com/hotJSguys/synergyTeams/blob/master/ROADMAP.md) 👨‍💻
 ## Licence
 MIT
