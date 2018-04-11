@@ -15,6 +15,7 @@ before_script:
 
 script:
   - cd server
+  - yarn install
   - yarn run lint
   - yarn run build
   - yarn run start &  # in background
