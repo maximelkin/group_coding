@@ -21,6 +21,8 @@ export const participationController = {
 
         await getRepository(ParticipationRequest)
             .save(participationRequest)
+
+        ctx.status = 200
     },
 
     async delete(ctx: Context, participationRequestId: number, user: User) {
@@ -37,5 +39,7 @@ export const participationController = {
 
         await getRepository(ParticipationRequest)
             .remove(participationRequest)
+
+        ctx.status = 200
     }
 }

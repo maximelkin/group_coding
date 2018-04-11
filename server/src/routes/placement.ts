@@ -13,7 +13,7 @@ export const placementRouter = new Router()
         ctx.assert(commonValidator.nonNegativeNumber(projectId), 400, 'wrong project id')
         ctx.assert(placementValidator.placementsLength(placements), 400, 'wrong placements array')
 
-        await placementController.create(ctx, ctx.session!, projectId, placements)
+        await placementController.create(ctx, ctx.state.user!, projectId, placements)
     })
     .put('/', async ctx => {
         const placementUpdates: PlacementUpdate[] = ctx.request.body
@@ -23,7 +23,7 @@ export const placementRouter = new Router()
         ctx.assert(commonValidator.nonNegativeNumber(projectId), 400, 'wrong project id')
         ctx.assert(placementValidator.placementsLength(placementUpdates), 400, 'wrong placements array')
 
-        await placementController.update(ctx, ctx.session!, projectId, placementUpdates)
+        await placementController.update(ctx, ctx.state.user, projectId, placementUpdates)
     })
     .delete('/', async ctx => {
         const placements: number[] = ctx.request.body

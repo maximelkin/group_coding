@@ -12,7 +12,9 @@ export class User {
     @Column()
     public body: string
 
-    @Column()
+    @Column({
+        nullable: true,
+    })
     public email: string
 
     @Column()

@@ -7,8 +7,12 @@ export const userController = { // за проезд передаем!
     async create(ctx: Context, username: string, password: string) {
         const hashedPassword = await hash(password, 12)
         await getRepository(User)
-            .insert({username, password: hashedPassword})
-
+            .insert({
+                username,
+                password: hashedPassword,
+                body: '',
+            })
+        ctx.status = 200
     },
 
     async read(ctx: Context, currentUser: User | undefined, username: string) {
@@ -32,13 +36,19 @@ export const userController = { // за проезд передаем!
             })
     },
 
-    async update(ctx: Context, user: User, {password, body}: { password?: string, body?: string }) {
+    async update(ctx: Context, user: User, {password, body, email}: {
+        password?: string, body?: string, email: string
+    }) {
+
         const hashed = password ? await hash(password, 12) : password
 
+        console.log('before update', user, body, password, email)
         await getRepository(User)
-            .updateById(user.username, {
+            .update({username: user.username}, {
                 body,
                 password: hashed,
+                email,
             })
+        ctx.status = 200
     },
 }

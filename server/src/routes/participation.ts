@@ -15,12 +15,12 @@ export const participationRouter = new Router()
 
         ctx.assert(commonValidator.nonNegativeNumber(placementId), 400, 'wrong placement id')
 
-        await participationController.create(ctx, placementId, ctx.session!)
+        await participationController.create(ctx, placementId, ctx.state.user)
     })
     .delete('/:id', async ctx => {
         const participationRequestId = parseInt(ctx.params.id, 10)
 
         ctx.assert(commonValidator.nonNegativeNumber(participationRequestId), 400, 'wrong placement id')
 
-        await participationController.delete(ctx, participationRequestId, ctx.session!)
+        await participationController.delete(ctx, participationRequestId, ctx.state.user)
     })

@@ -14,14 +14,10 @@ export class Placement {
     @Column()
     public projectId: number
 
-    @Column()
     @ManyToOne(() => Project, project => project.placements)
     @JoinColumn()
     public project: Project
 
-    @Column({
-        nullable: true,
-    })
     @ManyToOne(() => User, user => user.placements, {
         nullable: true,
     })

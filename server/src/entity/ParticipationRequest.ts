@@ -11,12 +11,10 @@ export class ParticipationRequest {
     @Column()
     public placementId: number
 
-    @Column()
     @ManyToOne(() => Placement, placement => placement.participationRequests)
     @JoinColumn()
     public placement: Placement
 
-    @Column()
     @ManyToOne(() => User, user => user.participationRequests)
     @JoinColumn()
     public user: User

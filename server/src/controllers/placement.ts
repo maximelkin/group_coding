@@ -39,6 +39,8 @@ export const placementController = {
         }
 
         await projectRepository.save(project)
+
+        ctx.status = 200
     },
 
     async update(ctx: Context, user: User, projectId: number, placementUpdates: PlacementUpdate[]) {
@@ -93,6 +95,8 @@ export const placementController = {
         if (placements.length > 0) {
             await placementRepository.save(placements)
         }
+
+        ctx.status = 200
     },
     async delete(ctx: Context, projectId: number, placements: number[]) {
         const projectRepository = getRepository(Project)
@@ -116,6 +120,6 @@ export const placementController = {
             .filter(placement => placements.includes(placement.id))
 
         await placementRepository.remove(placementsForRemove)
-
+        ctx.status = 200
     }
 }

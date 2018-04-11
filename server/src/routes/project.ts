@@ -17,7 +17,7 @@ const authenticatedProjectRouter = new Router()
         ctx.assert(projectValidator.header(header), 400, 'wrong new header')
         ctx.assert(projectValidator.text(text), 400, 'wrong new text')
 
-        await projectController.create(ctx, ctx.session!, {header, text})
+        await projectController.create(ctx, ctx.state.user!, {header, text})
     })
     .put('/:projectId', async ctx => {
         const {header, text}: {
@@ -25,7 +25,7 @@ const authenticatedProjectRouter = new Router()
             text?: string,
         } = ctx.request.body
 
-        const user = ctx.session!
+        const user = ctx.state.user!
         const projectId = parseInt(ctx.params.projectId, 10)
 
         ctx.assert(commonValidator.nonNegativeNumber(projectId), 400, 'wrong project id')
@@ -40,7 +40,7 @@ const authenticatedProjectRouter = new Router()
 
         ctx.assert(commonValidator.nonNegativeNumber(projectId), 400, 'wrong project id')
 
-        await projectController.delete(ctx, ctx.session!, projectId)
+        await projectController.delete(ctx, ctx.state.user!, projectId)
     })
     .use('/:projectId', placementRouter.routes(), placementRouter.allowedMethods())
 
@@ -59,6 +59,6 @@ export const projectRouter = new Router()
 
         ctx.assert(commonValidator.nonNegativeNumber(projectId), 400, 'wrong project id')
 
-        await projectController.read(ctx, ctx.session, projectId)
+        await projectController.read(ctx, ctx.state.user!, projectId)
     })
     .use(authenticatedProjectRouter.routes(), authenticatedProjectRouter.allowedMethods())
