@@ -16,6 +16,45 @@ test('create user', async () => {
         .expect(200)
 })
 
+test('read user', async () => {
+    await request.agent(app.callback())
+        .get('/user/pre_created')
+        .expect(200, {
+            username: 'pre_created',
+            body: '',
+            createdProjects: [],
+            placements: [],
+        })
+})
+
+test('read user authenticated', async () => {
+    const agent = request.agent(app.callback())
+
+    const res = await agent
+        .post('/authentication/local')
+        .type('json')
+        .send({
+            username: 'pre_created',
+            password: 'password'
+        })
+        .expect(200)
+    // @ts-ignore
+    const cookies = res.headers['set-cookie'][0].split(',').map(item => item.split(';')[0])
+    const cookie = cookies.join(';')
+
+    await request.agent(app.callback())
+        .get('/user/pre_created')
+        .set('Cookie', cookie)
+        .expect(200, {
+            username: 'pre_created',
+            body: '',
+            createdProjects: [],
+            placements: [],
+            email: null,
+            participationRequests: [],
+        })
+})
+
 test('update user', async () => {
     const agent = request.agent(app.callback())
 

@@ -20,13 +20,11 @@ export const userController = { // за проезд передаем!
         const selectColumns: Array<keyof User> = [
             'username',
             'body',
-            'createdProjects',
-            'placements'
         ]
 
         if (currentUser && currentUser.username === username) {
             relations.push('participationRequests')
-            selectColumns.push('participationRequests', 'email')
+            selectColumns.push('email')
         }
 
         ctx.body = await getRepository(User)
