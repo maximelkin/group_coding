@@ -42,7 +42,6 @@ export const userController = { // за проезд передаем!
 
         const hashed = password ? await hash(password, 12) : password
 
-        console.log('before update', user, body, password, email)
         await getRepository(User)
             .update({username: user.username}, {
                 body,
