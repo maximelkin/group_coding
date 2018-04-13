@@ -6,12 +6,20 @@ import {getRepository} from 'typeorm'
 export const userController = { // за проезд передаем!
     async create(ctx: Context, username: string, password: string) {
         const hashedPassword = await hash(password, 12)
-        await getRepository(User)
-            .insert({
-                username,
-                password: hashedPassword,
-                body: '',
-            })
+        try {
+            await getRepository(User)
+                .insert({
+                    username,
+                    password: hashedPassword,
+                    body: '',
+                })
+        } catch (e) {
+            if (e.message.startsWith('duplicate key value violates unique constraint')) {
+                return ctx.throw(400, 'already exists')
+            }
+            console.error(e)
+            return ctx.throw(500)
+        }
         ctx.status = 200
     },
 

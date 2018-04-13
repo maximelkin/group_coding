@@ -1,30 +1,42 @@
 import 'reflect-metadata'
 
-import {Connection, createConnection, getRepository} from 'typeorm'
+import {createConnection, getConnection, getRepository} from 'typeorm'
 import {User} from '../entity/User'
 import {hash} from 'bcryptjs'
 
-let connection: Connection
-let hashedPassword: string
+// uniqueness in test
+let usersCounter = 0
+
+const RUNNER_ID = process.env.JEST_WORKER_ID
+
+export function getNewUser() {
+    usersCounter++
+    const username = `user_${usersCounter}_${RUNNER_ID}`
+    return {
+        username,
+        password: 'password_' + Math.random() * 1000,
+    }
+}
+
+export async function getAndInsertNewUser() {
+    const user = {
+        ...getNewUser(),
+        email: `test@email.com.${usersCounter}.${RUNNER_ID}`,
+        body: 'body_' + Math.random() + 'a'
+    }
+
+    await getRepository(User).insert({
+        ...user,
+        password: await hash(user.password, 12)
+    })
+
+    return user
+}
 
 beforeAll(async () => {
-    hashedPassword = await hash('password', 12)
-    connection = await createConnection()
-})
-
-beforeEach(async () => {
-    await connection.dropDatabase()
-    await connection.synchronize()
-
-    await getRepository(User)
-        .insert({
-            username: 'pre_created',
-            password: hashedPassword,
-            body: '',
-        })
+    await createConnection()
 })
 
 afterAll(async () => {
-    await connection.dropDatabase()
-    await connection.close()
+    await getConnection().close()
 })

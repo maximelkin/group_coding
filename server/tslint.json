@@ -1,6 +1,15 @@
 {
   "extends": "tslint:latest",
-  "jsRules": {},
+  "jsRules": {
+    "quotemark": [
+      true,
+      "single"
+    ],
+    "semicolon": [
+      true,
+      "never"
+    ]
+  },
   "rules": {
     "arrow-parens": false,
     "no-import-side-effect": false,

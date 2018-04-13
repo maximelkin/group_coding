@@ -25,13 +25,15 @@
       "js",
       "json",
       "node"
-    ]
+    ],
+    "globalSetup": "./src/helpers/clearDatabase.js",
+    "globalTeardown": "./src/helpers/clearDatabase.js"
   },
   "scripts": {
     "start": "ts-node src/index.ts",
     "build": "tsc -p ./tsconfig.json",
     "lint": "tslint -p ./tsconfig.json",
-    "test": "jest --runInBand"
+    "test": "jest"
   },
   "dependencies": {
     "koa": "~2.5.0",

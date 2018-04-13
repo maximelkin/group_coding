@@ -15,5 +15,7 @@ export const authenticationRouter = new Router()
     })
     .get('/logout', ctx => {
         ctx.logout()
+        ctx.cookies.set('koa:sess')
+        ctx.cookies.set('koa:sess.sig')
         ctx.status = 200
     })
