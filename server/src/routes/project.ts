@@ -47,7 +47,9 @@ const authenticatedProjectRouter = new Router()
 export const projectRouter = new Router()
     .prefix('/project')
     .get('/', async ctx => {
-        const {from = 0, limit = 10} = ctx.request.query
+        let {from, limit} = ctx.request.query
+        from = from && parseInt(from, 10) || 0
+        limit = limit && parseInt(limit, 10) || 0
 
         ctx.assert.equal(typeof from, 'number', 400)
         ctx.assert.equal(typeof limit, 'number', 400)

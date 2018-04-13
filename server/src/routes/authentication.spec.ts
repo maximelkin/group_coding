@@ -1,11 +1,12 @@
-import {getAndInsertNewUser, getNewUser} from '../helpers/testHelper'
+import '../test_helpers/testHelper'
+import {getAndInsertNewUser, getNewUser} from '../test_helpers/user'
 
-import request = require('supertest')
+import supertest = require('supertest')
 import {app} from '../app'
 
 test('authentication with not existing user', async () => {
     const user = getNewUser() // not existing yet!
-    await request.agent(app.callback())
+    await supertest.agent(app.callback())
         .post('/authentication/local')
         .type('json')
         .send({
@@ -16,15 +17,8 @@ test('authentication with not existing user', async () => {
 })
 
 test('authentication with existing user', async () => {
-    const agent = request.agent(app.callback())
-    let user
-    try {
-        user = await getAndInsertNewUser() // existing
-
-    } catch (e) {
-        console.error(e)
-        return expect(false)
-    }
+    const agent = supertest.agent(app.callback())
+    const user = await getAndInsertNewUser() // existing
     const res = await agent
         .post('/authentication/local')
         .type('json')
@@ -48,7 +42,7 @@ test('authentication with existing user', async () => {
 })
 
 test('logout', async () => {
-    await request.agent(app.callback())
+    await supertest.agent(app.callback())
         .get('/authentication/logout')
         .expect(200)
         .expect('set-cookie', /koa:sess/)

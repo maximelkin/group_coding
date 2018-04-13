@@ -49,13 +49,14 @@ export const projectController = {
             return ctx.throw(404)
         }
 
-        if (user.username !== project.creator.username) {
+        if (user.username !== project.creatorId) {
             return ctx.throw(403, 'not creator of project')
         }
         project.header = header === undefined ? project.header : header
         project.text = text === undefined ? project.text : text
 
         await projectRepository.save(project)
+        ctx.status = 200
     },
 
     async delete(ctx: Context, user: User, projectId: number) {
@@ -67,10 +68,12 @@ export const projectController = {
             return ctx.throw(404)
         }
 
-        if (user.username !== project.creator.username) {
+        if (user.username !== project.creatorId) {
             return ctx.throw(403, 'not creator of project')
         }
 
         await projectsRepository.deleteById(project.id)
+
+        ctx.status = 200
     }
 }

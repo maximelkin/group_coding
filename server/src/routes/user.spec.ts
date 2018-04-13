@@ -1,13 +1,15 @@
-import {getAndInsertNewUser, getNewUser} from '../helpers/testHelper'
-import request = require('supertest')
+import '../test_helpers/testHelper'
+import supertest = require('supertest')
 import {app} from '../app'
 import {getRepository} from 'typeorm'
 import {User} from '../entity/User'
 import {compare} from 'bcryptjs'
+import {getAndInsertNewUser, getNewUser} from '../test_helpers/user'
+import {getCookies} from '../test_helpers/authentication'
 
 test('create user', async () => {
     const user = getNewUser()
-    await request.agent(app.callback())
+    await supertest.agent(app.callback())
         .post('/user')
         .type('json')
         .send({
@@ -20,7 +22,7 @@ test('create user', async () => {
 test('create duplicate user', async () => {
     const user = await getAndInsertNewUser()
 
-    await request.agent(app.callback())
+    await supertest.agent(app.callback())
         .post('/user')
         .type('json')
         .send({
@@ -32,7 +34,7 @@ test('create duplicate user', async () => {
 
 test('read user', async () => {
     const user = await getAndInsertNewUser()
-    await request.agent(app.callback())
+    await supertest.agent(app.callback())
         .get(`/user/${user.username}`)
         .expect(200, {
             username: user.username,
@@ -44,21 +46,11 @@ test('read user', async () => {
 
 test('read user authenticated', async () => {
     const user = await getAndInsertNewUser()
-    const agent = request.agent(app.callback())
+    const agent = supertest.agent(app.callback())
 
-    const res = await agent
-        .post('/authentication/local')
-        .type('json')
-        .send({
-            username: user.username,
-            password: user.password,
-        })
+    const cookie = await getCookies(agent, user)
 
-    // @ts-ignore
-    const cookies = res.headers['set-cookie'][0].split(',').map(item => item.split(';')[0])
-    const cookie = cookies.join(';')
-
-    await request.agent(app.callback())
+    await supertest.agent(app.callback())
         .get(`/user/${user.username}`)
         .set('Cookie', cookie)
         .expect(200, {
@@ -72,7 +64,7 @@ test('read user authenticated', async () => {
 })
 
 test('update user without credentials', async () => {
-    await request.agent(app.callback())
+    await supertest.agent(app.callback())
         .put('/user/')
         .type('json')
         .send({
@@ -85,19 +77,9 @@ test('update user without credentials', async () => {
 test('update user', async () => {
     const user = await getAndInsertNewUser()
 
-    const agent = request.agent(app.callback())
+    const agent = supertest.agent(app.callback())
 
-    const res = await agent
-        .post('/authentication/local')
-        .type('json')
-        .send({
-            username: user.username,
-            password: user.password,
-        })
-        .expect(200)
-    // @ts-ignore
-    const cookies = res.headers['set-cookie'][0].split(',').map(item => item.split(';')[0])
-    const cookie = cookies.join(';')
+    const cookie = await getCookies(agent, user)
 
     await agent
         .put('/user/')

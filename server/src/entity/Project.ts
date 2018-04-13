@@ -14,11 +14,11 @@ export class Project {
     @Column({type: 'text'})
     public text: string
 
-    @Column()
+    @Column({nullable: false})
     public creatorId: string
 
     @ManyToOne(() => User, creator => creator.createdProjects)
-    @JoinColumn()
+    @JoinColumn({name: 'creatorId'})
     public creator: User
 
     @OneToMany(() => Placement, placement => placement.project, {

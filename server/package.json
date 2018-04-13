@@ -26,8 +26,8 @@
       "json",
       "node"
     ],
-    "globalSetup": "./src/helpers/clearDatabase.js",
-    "globalTeardown": "./src/helpers/clearDatabase.js"
+    "globalSetup": "./src/test_helpers/clearDatabase.js",
+    "globalTeardown": "./src/test_helpers/clearDatabase.js"
   },
   "scripts": {
     "start": "ts-node src/index.ts",
