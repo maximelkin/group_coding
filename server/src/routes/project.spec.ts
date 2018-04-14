@@ -14,7 +14,7 @@ test('get projects', async () => {
     const projects = JSON.parse((await agent.get('/project?limit=10000')).text)
     expect(projects).toContainEqual({
         ...project,
-        creatorId: creator.username,
+        creatorUsername: creator.username,
     })
 })
 
@@ -26,7 +26,7 @@ test('get project', async () => {
         .expect(200, {
             ...project,
             placements: [],
-            creatorId: creator.username,
+            creatorUsername: creator.username,
         })
 })
 
@@ -81,7 +81,7 @@ test('update project', async () => {
     expect(updatedProject).toEqual({
         ...projectUpdate,
         id: projectBefore.id,
-        creatorId: projectBefore.creator.username,
+        creatorUsername: projectBefore.creator.username,
     })
 })
 

@@ -8,7 +8,7 @@ const RUNNER_ID = process.env.JEST_WORKER_ID
 
 export function getNewUser() {
     usersCounter++
-    const username = `user_${usersCounter}_${RUNNER_ID}`
+    const username = `u_${usersCounter}_${RUNNER_ID}_${Date.now() % 1000000}`
     return {
         username,
         password: 'password_' + Math.random() * 1000,

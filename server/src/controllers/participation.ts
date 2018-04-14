@@ -19,10 +19,10 @@ export const participationController = {
         participationRequest.user = user
         participationRequest.placement = placement
 
-        await getRepository(ParticipationRequest)
+        const saved = await getRepository(ParticipationRequest)
             .save(participationRequest)
 
-        ctx.status = 200
+        ctx.body = saved.id
     },
 
     async delete(ctx: Context, participationRequestId: number, user: User) {
@@ -33,7 +33,7 @@ export const participationController = {
             return ctx.throw(404)
         }
 
-        if (participationRequest.user.username !== user.username) {
+        if (participationRequest.username !== user.username) {
             return ctx.throw(403, 'wrong user')
         }
 

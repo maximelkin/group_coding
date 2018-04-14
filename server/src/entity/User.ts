@@ -12,10 +12,10 @@ export class User {
     @Column()
     public body: string
 
-    @Column({
-        nullable: true,
+    @Column('varchar', {
+        nullable: true
     })
-    public email: string
+    public email: string | null
 
     @Column()
     public password: string

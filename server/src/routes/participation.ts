@@ -4,7 +4,7 @@ import {commonValidator} from '../validators/common'
 
 export const participationRouter = new Router()
     .prefix('/participation')
-    .use((ctx, next) => {
+    .use(async (ctx, next) => {
         if (!ctx.isAuthenticated()) {
             return ctx.throw(401)
         }

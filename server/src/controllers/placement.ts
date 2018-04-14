@@ -1,8 +1,9 @@
 import {Context} from 'koa'
-import {getRepository} from 'typeorm'
+import {getManager, getRepository} from 'typeorm'
 import {Project} from '../entity/Project'
 import {Placement} from '../entity/Placement'
 import {User} from '../entity/User'
+import {ParticipationRequest} from '../entity/ParticipationRequest'
 
 export interface PlacementUpdate {
     accept?: number     // id of participationRequest
@@ -23,7 +24,7 @@ export const placementController = {
             return ctx.throw(404)
         }
 
-        if (project.creatorId !== user.username) {
+        if (project.creatorUsername !== user.username) {
             return ctx.throw(403, 'not a project manager')
         }
 
@@ -62,8 +63,12 @@ export const placementController = {
                     relations
                 })
 
+            if (!placement) {
+                return ctx.throw(400, `no such placement: ${id}`)
+            }
+
             if (!placement || placement.projectId !== projectId) {
-                continue
+                return ctx.throw(403, `no rights to edit: ${id}`)
             }
 
             if (name) {
@@ -71,12 +76,19 @@ export const placementController = {
             }
 
             if (accept) {
+                if (Array.isArray(accept)) {
+                    return ctx.throw(400, 'accept should not be array')
+                }
                 const foundParticipationRequest = placement.participationRequests.find(
                     request => request.id === accept
                 )
                 if (foundParticipationRequest) {
                     placement.user = foundParticipationRequest.user
                 }
+            }
+
+            if (decline && !Array.isArray(decline)) {
+                return ctx.throw(400, 'decline should be array')
             }
 
             if (decline && decline.length > 0) {
@@ -98,20 +110,19 @@ export const placementController = {
 
         ctx.status = 200
     },
-    async delete(ctx: Context, projectId: number, placements: number[]) {
+    async delete(ctx: Context, user: User, projectId: number, placements: number[]) {
         const projectRepository = getRepository(Project)
-        const placementRepository = getRepository(Placement)
 
         const project = await projectRepository
             .findOneById(projectId, {
-                relations: ['placements']
+                relations: ['placements', 'placements.participationRequests']
             })
 
         if (!project) {
             return ctx.throw(404)
         }
 
-        if (project.creatorId !== ctx.session!.username) {
+        if (project.creatorUsername !== user.username) {
             return ctx.throw(403, 'not project manager')
         }
 
@@ -119,7 +130,16 @@ export const placementController = {
             .placements
             .filter(placement => placements.includes(placement.id))
 
-        await placementRepository.remove(placementsForRemove)
+        await getManager()
+            .transaction(async entityManger => {
+                for (const {participationRequests} of placementsForRemove) {
+                    await entityManger.getRepository(ParticipationRequest)
+                        .remove(participationRequests)
+                }
+
+                await entityManger.getRepository(Placement)
+                    .remove(placementsForRemove)
+            })
         ctx.status = 200
     }
 }

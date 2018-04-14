@@ -8,7 +8,7 @@ export const authenticationRouter = new Router()
         return koaPassport.authenticate('local')(ctx, next)
     })
     .get('/test', async ctx => {
-        if (ctx.isUnauthenticated() || !ctx.session) {
+        if (ctx.isUnauthenticated()) {
             return ctx.throw(401)
         }
         ctx.status = 200

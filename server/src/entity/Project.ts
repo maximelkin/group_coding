@@ -15,10 +15,10 @@ export class Project {
     public text: string
 
     @Column({nullable: false})
-    public creatorId: string
+    public creatorUsername: string
 
     @ManyToOne(() => User, creator => creator.createdProjects)
-    @JoinColumn({name: 'creatorId'})
+    @JoinColumn({name: 'creatorUsername'})
     public creator: User
 
     @OneToMany(() => Placement, placement => placement.project, {

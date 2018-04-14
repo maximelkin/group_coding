@@ -1,5 +1,4 @@
 import * as Router from 'koa-router'
-import {placementRouter} from './placement'
 import {projectController} from '../controllers/project'
 import {projectValidator} from '../validators/project'
 import {commonValidator} from '../validators/common'
@@ -42,7 +41,6 @@ const authenticatedProjectRouter = new Router()
 
         await projectController.delete(ctx, ctx.state.user!, projectId)
     })
-    .use('/:projectId', placementRouter.routes(), placementRouter.allowedMethods())
 
 export const projectRouter = new Router()
     .prefix('/project')
