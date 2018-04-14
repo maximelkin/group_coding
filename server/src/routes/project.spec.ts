@@ -50,6 +50,19 @@ test('create project', async () => {
         .expect(/^\d+$/)
 })
 
+test('update project non authorized', async () => {
+    const user = await getAndInsertNewUser()
+    const agent = supertest.agent(app.callback())
+
+    const projectBefore = await getAndInsertNewProject(user)
+
+    const projectUpdate = getNewProjectStub()
+
+    await agent.put(`/project/${projectBefore.id}`)
+        .send(projectUpdate)
+        .expect(401)
+})
+
 test('update project', async () => {
     const user = await getAndInsertNewUser()
     const agent = supertest.agent(app.callback())
@@ -70,6 +83,16 @@ test('update project', async () => {
         id: projectBefore.id,
         creatorId: projectBefore.creator.username,
     })
+})
+
+test('delete project not authorized', async () => {
+    const user = await getAndInsertNewUser()
+    const agent = supertest.agent(app.callback())
+
+    const projectBefore = await getAndInsertNewProject(user)
+
+    await agent.delete(`/project/${projectBefore.id}`)
+        .expect(401)
 })
 
 test('delete project', async () => {
