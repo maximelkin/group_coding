@@ -1,5 +1,4 @@
 import * as Router from 'koa-router'
-import {placementRouter} from './placement'
 import {projectController} from '../controllers/project'
 import {projectValidator} from '../validators/project'
 import {commonValidator} from '../validators/common'
@@ -17,7 +16,7 @@ const authenticatedProjectRouter = new Router()
         ctx.assert(projectValidator.header(header), 400, 'wrong new header')
         ctx.assert(projectValidator.text(text), 400, 'wrong new text')
 
-        await projectController.create(ctx, ctx.session!, {header, text})
+        await projectController.create(ctx, ctx.state.user!, {header, text})
     })
     .put('/:projectId', async ctx => {
         const {header, text}: {
@@ -25,7 +24,7 @@ const authenticatedProjectRouter = new Router()
             text?: string,
         } = ctx.request.body
 
-        const user = ctx.session!
+        const user = ctx.state.user!
         const projectId = parseInt(ctx.params.projectId, 10)
 
         ctx.assert(commonValidator.nonNegativeNumber(projectId), 400, 'wrong project id')
@@ -40,14 +39,15 @@ const authenticatedProjectRouter = new Router()
 
         ctx.assert(commonValidator.nonNegativeNumber(projectId), 400, 'wrong project id')
 
-        await projectController.delete(ctx, ctx.session!, projectId)
+        await projectController.delete(ctx, ctx.state.user!, projectId)
     })
-    .use('/:projectId', placementRouter.routes(), placementRouter.allowedMethods())
 
 export const projectRouter = new Router()
     .prefix('/project')
     .get('/', async ctx => {
-        const {from = 0, limit = 10} = ctx.request.query
+        let {from, limit} = ctx.request.query
+        from = from && parseInt(from, 10) || 0
+        limit = limit && parseInt(limit, 10) || 0
 
         ctx.assert.equal(typeof from, 'number', 400)
         ctx.assert.equal(typeof limit, 'number', 400)
@@ -59,6 +59,6 @@ export const projectRouter = new Router()
 
         ctx.assert(commonValidator.nonNegativeNumber(projectId), 400, 'wrong project id')
 
-        await projectController.read(ctx, ctx.session, projectId)
+        await projectController.read(ctx, ctx.state.user!, projectId)
     })
     .use(authenticatedProjectRouter.routes(), authenticatedProjectRouter.allowedMethods())

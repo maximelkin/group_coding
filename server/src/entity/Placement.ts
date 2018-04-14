@@ -11,21 +11,24 @@ export class Placement {
     @Column()
     public name: string
 
-    @Column()
+    @Column({
+        nullable: false,
+    })
     public projectId: number
-
-    @Column()
-    @ManyToOne(() => Project, project => project.placements)
-    @JoinColumn()
-    public project: Project
 
     @Column({
         nullable: true,
     })
+    public username: string | null
+
+    @ManyToOne(() => Project, project => project.placements)
+    @JoinColumn({name: 'projectId'})
+    public project: Project
+
     @ManyToOne(() => User, user => user.placements, {
         nullable: true,
     })
-    @JoinColumn()
+    @JoinColumn({name: 'username'})
     public user: User | null
 
     @OneToMany(() => ParticipationRequest, participationRequest => participationRequest.placement, {

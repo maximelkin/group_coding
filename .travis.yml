@@ -14,6 +14,8 @@ before_script:
   - psql -c 'create database synergy;' -U postgres
 
 script:
+  - cd server
+  - yarn install
   - yarn run lint
   - yarn run build
   - yarn run start &  # in background

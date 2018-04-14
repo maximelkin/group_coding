@@ -1,4 +1,4 @@
-const usernameRe = /$[a-z_\-]{1,12}^/
+const usernameRe = /^[a-z\d_\-]{1,12}$/
 export const userValidator = {
     username(username: any): username is string {
         return typeof username === 'string' && usernameRe.test(username)
@@ -11,5 +11,9 @@ export const userValidator = {
     body(body: any): body is string {
         return typeof body === 'string' && body.length < 2000
     },
+
+    email(email: any): email is string {
+        return typeof email === 'string' && email.includes('@') && email.length > 3 && email.length < 400
+    }
 
 }
