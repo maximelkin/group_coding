@@ -47,10 +47,11 @@ export const projectRouter = new Router()
     .get('/', async ctx => {
         let {from, limit} = ctx.request.query
         from = from && parseInt(from, 10) || 0
-        limit = limit && parseInt(limit, 10) || 0
+        limit = limit && parseInt(limit, 10) || 10
 
         ctx.assert.equal(typeof from, 'number', 400)
         ctx.assert.equal(typeof limit, 'number', 400)
+        ctx.assert(limit <= 1000, 400, 'too big limit')
 
         await projectController.readMany(ctx, {from, limit})
     })
