@@ -21,6 +21,21 @@ export class Placement {
     })
     public username: string | null
 
+    @Column({
+        nullable: true,
+    })
+    public side: string
+
+    @Column({
+        nullable: true,
+    })
+    public language: string
+
+    @Column({
+        nullable: true,
+    })
+    public framework: string
+
     @ManyToOne(() => Project, project => project.placements)
     @JoinColumn({name: 'projectId'})
     public project: Project

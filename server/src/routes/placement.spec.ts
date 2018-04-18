@@ -49,12 +49,18 @@ test('create placement', async () => {
                 id: expect.anything(),
                 name: 'aaa',
                 username: null,
+                side: null,
+                language: null,
+                framework: null,
                 projectId: project.id,
             },
             {
                 id: expect.anything(),
                 name: 'bbb',
                 username: null,
+                side: null,
+                language: null,
+                framework: null,
                 projectId: project.id,
             },
         ]))
@@ -108,6 +114,9 @@ test('update placements', async () => {
         .toContainEqual({
             id: placement1.id,
             username: null,
+            side: null,
+            language: null,
+            framework: null,
             projectId: project.id,
             name: 'new_name',
             participationRequests: [{
@@ -122,6 +131,9 @@ test('update placements', async () => {
         .toContainEqual({
             id: placement2.id,
             username: simpleUser.username,
+            side: null,
+            language: null,
+            framework: null,
             projectId: project.id,
             name: placement2.name,
             participationRequests: [{
@@ -136,6 +148,9 @@ test('update placements', async () => {
         .toContainEqual({
             id: placement3.id,
             username: null,
+            side: null,
+            language: null,
+            framework: null,
             projectId: project.id,
             name: placement3.name,
             participationRequests: [{
@@ -183,6 +198,9 @@ test('delete placements', async () => {
     expect(projectAfterInsert.placements).toEqual([{
         id: placement1.id,
         username: null,
+        side: null,
+        language: null,
+        framework: null,
         projectId: project.id,
         name: placement1.name,
         participationRequests: [{

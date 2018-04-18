@@ -43,7 +43,7 @@ test('create participation', async () => {
         placementId: placement.id,
         declined: false,
     })
-})
+}, 10000)
 
 test('delete participation', async () => {
     const user = await getAndInsertNewUser()
