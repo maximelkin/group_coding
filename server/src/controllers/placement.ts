@@ -35,10 +35,6 @@ export const placementController = {
             return placement
         }))
 
-        if (project.placements.length > 50) {
-            return ctx.throw(400)
-        }
-
         await projectRepository.save(project)
 
         ctx.status = 200
@@ -64,7 +60,7 @@ export const placementController = {
                 })
 
             if (!placement) {
-                return ctx.throw(400, `no such placement: ${id}`)
+                return ctx.throw(404, `no such placement: ${id}`)
             }
 
             if (!placement || placement.projectId !== projectId) {
@@ -76,19 +72,12 @@ export const placementController = {
             }
 
             if (accept) {
-                if (Array.isArray(accept)) {
-                    return ctx.throw(400, 'accept should not be array')
-                }
                 const foundParticipationRequest = placement.participationRequests.find(
                     request => request.id === accept
                 )
                 if (foundParticipationRequest) {
                     placement.user = foundParticipationRequest.user
                 }
-            }
-
-            if (decline && !Array.isArray(decline)) {
-                return ctx.throw(400, 'decline should be array')
             }
 
             if (decline && decline.length > 0) {

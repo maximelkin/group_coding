@@ -1,6 +1,7 @@
 import * as Router from 'koa-router'
 import {participationController} from '../controllers/participation'
-import {commonValidator} from '../validators/common'
+import validate = require('koa-joi-validate')
+import {participationValidator} from '../validators/participation'
 
 export const participationRouter = new Router()
     .prefix('/participation')
@@ -10,17 +11,17 @@ export const participationRouter = new Router()
         }
         return next()
     })
-    .post('/', async ctx => {
-        const placementId = parseInt(ctx.request.body.placementId, 10)
+    .post('/',
+        validate(participationValidator.create),
+        async ctx => {
+            const placementId = ctx.request.body.placementId
 
-        ctx.assert(commonValidator.nonNegativeNumber(placementId), 400, 'wrong placement id')
+            await participationController.create(ctx, placementId, ctx.state.user)
+        })
+    .delete('/:id',
+        validate(participationValidator.delete),
+        async ctx => {
+            const participationRequestId = parseInt(ctx.params.id, 10)
 
-        await participationController.create(ctx, placementId, ctx.state.user)
-    })
-    .delete('/:id', async ctx => {
-        const participationRequestId = parseInt(ctx.params.id, 10)
-
-        ctx.assert(commonValidator.nonNegativeNumber(participationRequestId), 400, 'wrong placement id')
-
-        await participationController.delete(ctx, participationRequestId, ctx.state.user)
-    })
+            await participationController.delete(ctx, participationRequestId, ctx.state.user)
+        })
