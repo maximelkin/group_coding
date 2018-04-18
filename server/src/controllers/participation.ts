@@ -12,7 +12,7 @@ export const participationController = {
             .findOneById(placementId)
 
         if (!placement) {
-            return ctx.throw(400, 'placement not found')
+            return ctx.throw(404, `placement not found: ${placementId}`)
         }
 
         const participationRequest = new ParticipationRequest()

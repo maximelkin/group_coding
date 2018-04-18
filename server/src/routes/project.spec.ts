@@ -11,7 +11,7 @@ test('get projects', async () => {
     const user = await getAndInsertNewUser()
     const agent = supertest.agent(app.callback())
     const {creator, ...project} = await getAndInsertNewProject(user)
-    const projects = JSON.parse((await agent.get('/project?limit=1000')).text)
+    const projects = JSON.parse((await agent.get('/project?limit=999')).text)
     expect(projects).toContainEqual({
         ...project,
         creatorUsername: creator.username,

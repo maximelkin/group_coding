@@ -1,19 +1,27 @@
+import * as joi from 'joi'
+
 const usernameRe = /^[a-z\d_\-]{1,12}$/
+
+const joiUsername = joi.string().regex(usernameRe)
+
+const password = joi.string().min(3).max(50)
 export const userValidator = {
-    username(username: any): username is string {
-        return typeof username === 'string' && usernameRe.test(username)
+    read: {
+        params: joi.object({
+            username: joiUsername.required(),
+        }),
     },
-
-    password(password: any): password is string {
-        return typeof password === 'string' && password.length < 30 && password.length > 2
+    create: {
+        body: joi.object({
+            username: joiUsername.required(),
+            password: password.required(),
+        }),
     },
-
-    body(body: any): body is string {
-        return typeof body === 'string' && body.length < 2000
+    update: {
+        body: joi.object({
+            password,
+            body: joi.string().max(5000),
+            email: joi.string().email()
+        }),
     },
-
-    email(email: any): email is string {
-        return typeof email === 'string' && email.includes('@') && email.length > 3 && email.length < 400
-    }
-
 }

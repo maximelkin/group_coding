@@ -6,9 +6,7 @@ import validate = require('koa-joi-validate')
 export const searchRouter = new Router()
     .prefix('/search')
     .get('/placements',
-        validate({
-            query: searchValidator.placements,
-        }),
+        validate(searchValidator.placements),
         async ctx => {
             // tslint:disable
             let {limit, offset, direction, ...conditions} = ctx.query

@@ -15,9 +15,9 @@ export const projectController = {
         ctx.body = projectSaved.id
     },
 
-    async readMany(ctx: Context, {from, limit}: { from: number, limit: number }) {
+    async readMany(ctx: Context, {offset, limit}: { offset: number, limit: number }) {
         ctx.body = await getRepository(Project)
-            .find({take: limit, skip: from})
+            .find({take: limit, skip: offset})
     },
 
     async read(ctx: Context, user: User | undefined, projectId: number) {
