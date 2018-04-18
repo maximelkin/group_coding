@@ -4,27 +4,41 @@ import {User} from './entity/User'
 import {getRepository} from 'typeorm'
 import {compare} from 'bcryptjs'
 
-const userRepository = getRepository(User)
 passport.serializeUser((user: User, done) => {
     done(null, user.username)
 })
 
-passport.deserializeUser(async (id, done) => {
-    const user = await userRepository.findOneById(id)
-    done(null, user)
+passport.deserializeUser(async (username, done) => {
+    try {
+        const userRepository = getRepository(User)
+        const user = await userRepository.findOneById(username)
+        done(null, user)
+    } catch (e) {
+        console.error(e)
+        done(e)
+    }
 })
 
 passport.use(new local.Strategy({
     usernameField: 'username',
     passwordField: 'password',
 }, async (username, password, done) => {
-    const user = await userRepository.findOneById(username)
-    if (!user) {
-        return done(new Error('wrong user'))
+    try {
+        const userRepository = getRepository(User)
+
+        const user = await userRepository.findOneById(username)
+
+        if (!user) {
+            return done(null, false)
+        }
+
+        const compareResult = await compare(password, user.password)
+        if (!compareResult) {
+            return done(null, false)
+        }
+        done(null, user)
+    } catch (e) {
+        console.error(e)
+        done(e)
     }
-    const compareResult = await compare(password, user.password)
-    if (!compareResult) {
-        return done(new Error('wrong password'))
-    }
-    done(null, user)
 }))

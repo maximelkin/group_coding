@@ -12,6 +12,11 @@ export class User {
     @Column()
     public body: string
 
+    @Column('varchar', {
+        nullable: true
+    })
+    public email: string | null
+
     @Column()
     public password: string
 

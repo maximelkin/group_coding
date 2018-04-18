@@ -1,7 +1,45 @@
 version: 3
 
-# todo postgres, nginx, redis
+# todo certbot
 services:
+
   server:
     build: ./server
     init: true
+    depends_on:
+      - postgres
+    expose:
+      - 3000
+
+  postgres:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+    network_mode: "service:server"
+    volumes:
+      - "/var/lib:/var/lib/postgresql/data"
+
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - '80:80'
+      - '443:443'
+
+    environment:
+       - NGINX_HOST=foobar.com # TODO
+
+    volumes:
+      - ./nginx.conf.template:/etc/nginx/conf.d/config.template:ro
+      - ./client/build:/srv/www:ro
+      - /etc/certs:/etc/letsencrypt/live/ico.fastr.biz:ro
+
+    depends_on:
+      - server
+
+    restart: always
+
+    command: /bin/bash -c "envsubst < /etc/nginx/conf.d/config.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+

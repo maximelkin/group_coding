@@ -8,12 +8,23 @@ export class ParticipationRequest {
     public id: number
 
     @Column()
+    public placementId: number
+
+    @Column({
+        nullable: false,
+    })
+    public username: string
+
     @ManyToOne(() => Placement, placement => placement.participationRequests)
-    @JoinColumn()
+    @JoinColumn({name: 'placementId'})
     public placement: Placement
 
-    @Column()
     @ManyToOne(() => User, user => user.participationRequests)
-    @JoinColumn()
+    @JoinColumn({name: 'username'})
     public user: User
+
+    @Column('bool', {
+        default: false,
+    })
+    public declined: boolean
 }

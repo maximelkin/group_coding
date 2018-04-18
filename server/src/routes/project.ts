@@ -1,92 +1,65 @@
 import * as Router from 'koa-router'
-import {getRepository} from 'typeorm'
-import {Project} from '../entity/Project'
-import {Placement} from '../entity/Placement'
-import {User} from '../entity/User'
+import {projectController} from '../controllers/project'
+import {projectValidator} from '../validators/project'
+import {commonValidator} from '../validators/common'
+
+const authenticatedProjectRouter = new Router()
+    .use((ctx, next) => {
+        if (!ctx.isAuthenticated()) {
+            return ctx.throw(401)
+        }
+        return next()
+    })
+    .post('/', async ctx => {
+        const {header, text} = ctx.request.body
+
+        ctx.assert(projectValidator.header(header), 400, 'wrong new header')
+        ctx.assert(projectValidator.text(text), 400, 'wrong new text')
+
+        await projectController.create(ctx, ctx.state.user!, {header, text})
+    })
+    .put('/:projectId', async ctx => {
+        const {header, text}: {
+            header?: string,
+            text?: string,
+        } = ctx.request.body
+
+        const user = ctx.state.user!
+        const projectId = parseInt(ctx.params.projectId, 10)
+
+        ctx.assert(commonValidator.nonNegativeNumber(projectId), 400, 'wrong project id')
+
+        ctx.assert(!header || projectValidator.header(header), 400, 'wrong new header')
+        ctx.assert(!text || projectValidator.text(text), 400, 'wrong new text')
+
+        await projectController.update(ctx, user, projectId, {header, text})
+    })
+    .delete('/:projectId', async ctx => {
+        const projectId = parseInt(ctx.params.projectId, 10)
+
+        ctx.assert(commonValidator.nonNegativeNumber(projectId), 400, 'wrong project id')
+
+        await projectController.delete(ctx, ctx.state.user!, projectId)
+    })
 
 export const projectRouter = new Router()
     .prefix('/project')
-    .get('/', ctx => {
-        const {from = 0, limit = 10} = ctx.request.query
-        return getRepository(Project)
-            .find({take: limit, skip: from})
+    .get('/', async ctx => {
+        let {from, limit} = ctx.request.query
+        from = from && parseInt(from, 10) || 0
+        limit = limit && parseInt(limit, 10) || 10
+
+        ctx.assert.equal(typeof from, 'number', 400)
+        ctx.assert.equal(typeof limit, 'number', 400)
+        ctx.assert(limit <= 1000, 400, 'too big limit')
+
+        await projectController.readMany(ctx, {from, limit})
     })
-    .get('/:id', ctx => {
-        const id = ctx.params.id
-        return getRepository(Project)
-            .findOneById(id)
+    .get('/:projectId', async ctx => {
+        const projectId = parseInt(ctx.params.projectId, 10)
+
+        ctx.assert(commonValidator.nonNegativeNumber(projectId), 400, 'wrong project id')
+
+        await projectController.read(ctx, ctx.state.user!, projectId)
     })
-    .post('/', ctx => {
-        if (!ctx.isAuthenticated()) {
-            return ctx.throw(401)
-        }
-        const {header, text, placements} = ctx.body
-        const user = ctx.session as any as User
-        const project = new Project()
-        project.header = header
-        project.text = text
-        project.creator = user
-        project.placements = (placements || []).map((name: string): Placement => {
-            const placement = new Placement()
-            placement.name = name
-            return placement
-        })
-
-        return getRepository(Project)
-            .save(project)
-    })
-    .put('/:id', async ctx => {
-        if (!ctx.isAuthenticated()) {
-            return ctx.throw(401)
-        }
-        const {header, text, addPlacements = [], removePlacements = []}: {
-            header?: string,
-            text?: string,
-            addPlacements: string[], // ids
-            removePlacements: number[],
-            assignUsers: string[],
-        } = ctx.body
-
-        const user = ctx.session as any as User
-        const projectRepository = getRepository(Project)
-        const project = await projectRepository
-            .findOneById(ctx.params.id)
-
-        if (!project) {
-            return ctx.throw(400, 'no such project')
-        }
-
-        if (user.username !== project.creator.username) {
-            return ctx.throw(403, 'not creator of project')
-        }
-        project.header = header === undefined ? project.header : header
-        project.text = text === undefined ? project.text : text
-        project.placements = project.placements
-            .filter(placement => removePlacements.includes(placement.id))
-            .concat(addPlacements.map(name => {
-                const placement = new Placement()
-                placement.name = name
-                return placement
-            }))
-
-        await projectRepository.save(project)
-    })
-    .delete('/:id', async ctx => {
-        if (!ctx.isAuthenticated()) {
-            return ctx.throw(401)
-        }
-        const user = ctx.session as any as User
-        const projectsRepository = getRepository(Project)
-        const project = await projectsRepository
-            .findOneById(ctx.params.id)
-
-        if (!project) {
-            return ctx.throw(400, 'no such project')
-        }
-
-        if (user.username !== project.creator.username) {
-            return ctx.throw(403, 'not creator of project')
-        }
-
-        await projectsRepository.deleteById(project.id)
-    })
+    .use(authenticatedProjectRouter.routes(), authenticatedProjectRouter.allowedMethods())

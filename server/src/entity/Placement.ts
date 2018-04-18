@@ -11,20 +11,44 @@ export class Placement {
     @Column()
     public name: string
 
-    @Column()
-    @ManyToOne(() => Project, project => project.placements)
-    @JoinColumn()
-    public project: Project
+    @Column({
+        nullable: false,
+    })
+    public projectId: number
 
     @Column({
         nullable: true,
     })
+    public username: string | null
+
+    @Column({
+        nullable: true,
+    })
+    public side: string
+
+    @Column({
+        nullable: true,
+    })
+    public language: string
+
+    @Column({
+        nullable: true,
+    })
+    public framework: string
+
+    @ManyToOne(() => Project, project => project.placements)
+    @JoinColumn({name: 'projectId'})
+    public project: Project
+
     @ManyToOne(() => User, user => user.placements, {
         nullable: true,
     })
-    @JoinColumn()
+    @JoinColumn({name: 'username'})
     public user: User | null
 
-    @OneToMany(() => ParticipationRequest, participationRequest => participationRequest.placement)
+    @OneToMany(() => ParticipationRequest, participationRequest => participationRequest.placement, {
+        cascadeUpdate: true,
+        cascadeInsert: true,
+    })
     public participationRequests: ParticipationRequest[]
 }
