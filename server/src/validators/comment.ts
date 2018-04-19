@@ -1,5 +1,5 @@
 import * as joi from 'joi'
-import {joiEntityId, joiEntityIdAsString, joiUsername} from './common'
+import {joiEntityId, joiEntityIdAsString, joiPagination, joiUsername} from './common'
 
 export const commentValidator = {
     readByProject: {
@@ -9,7 +9,8 @@ export const commentValidator = {
     },
     readByUser: {
         params: joi.object({
-            username: joiUsername.required()
+            username: joiUsername.required(),
+            ...joiPagination,
         })
     },
     create: {
