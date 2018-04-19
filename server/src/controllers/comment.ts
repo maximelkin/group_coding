@@ -54,7 +54,7 @@ export const commentController = {
 
     async create(ctx: Context, user: User, projectId: number, {message, parentCommentId}: {
         message: string,
-        parentCommentId: number,
+        parentCommentId?: number | null,
     }) {
         const commentRepository = getRepository(Comment)
 
@@ -72,7 +72,7 @@ export const commentController = {
             username: user.username,
             projectId,
             message,
-            parentCommentId
+            parentCommentId: (parentCommentId || null) as number,
         }) as Comment
         ctx.body = comment.id
     },

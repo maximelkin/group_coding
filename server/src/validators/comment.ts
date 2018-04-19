@@ -4,21 +4,21 @@ import {joiEntityId, joiEntityIdAsString, joiUsername} from './common'
 export const commentValidator = {
     readByProject: {
         params: joi.object({
-            projectId: joiEntityIdAsString
+            projectId: joiEntityIdAsString.required()
         })
     },
     readByUser: {
         params: joi.object({
-            username: joiUsername
+            username: joiUsername.required()
         })
     },
     create: {
         params: joi.object({
-            projectId: joiEntityIdAsString
+            projectId: joiEntityIdAsString.required()
         }),
         body: joi.object({
-            message: joi.string().max(3000),
-            parentCommentId: joiEntityId,
+            message: joi.string().max(3000).required(),
+            parentCommentId: [joiEntityId, null],
         })
     }
 }
