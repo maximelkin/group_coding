@@ -11,10 +11,10 @@ export const participationRouter = new Router()
         }
         return next()
     })
-    .post('/',
+    .post('/placement/:placementId',
         validate(participationValidator.create),
         async ctx => {
-            const placementId = ctx.request.body.placementId
+            const placementId = parseInt(ctx.params.placementId, 10)
 
             await participationController.create(ctx, placementId, ctx.state.user)
         })

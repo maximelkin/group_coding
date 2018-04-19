@@ -12,13 +12,13 @@ import {User} from '../entity/User'
 
 test('not authenticated', async () => {
     const agent = supertest.agent(app.callback())
-    await agent.post('/project/1/placement')
+    await agent.post('/placement/project/1')
         .expect(401)
 
-    await agent.put('/project/1/placement')
+    await agent.put('/placement/project/1')
         .expect(401)
 
-    await agent.delete('/project/1/placement')
+    await agent.delete('/placement/project/1')
         .expect(401)
 })
 
@@ -30,7 +30,7 @@ test('create placement', async () => {
 
     const project = await getAndInsertNewProject(creator)
 
-    await agent.post(`/project/${project.id}/placement`)
+    await agent.post(`/placement/project/${project.id}`)
         .send([
             'aaa',
             'bbb',
@@ -84,7 +84,7 @@ test('update placements', async () => {
     const placement2Request = await getAndInsertNewParticipationRequest(placement2, simpleUser)
     const placement3Request = await getAndInsertNewParticipationRequest(placement3, simpleUser)
 
-    await agent.put(`/project/${project.id}/placement`)
+    await agent.put(`/placement/project/${project.id}`)
         .send([
             {
                 id: placement1.id,
@@ -177,7 +177,7 @@ test('delete placements', async () => {
     const placement1Request = await getAndInsertNewParticipationRequest(placement1, simpleUser)
     await getAndInsertNewParticipationRequest(placement2, simpleUser)
 
-    await agent.delete(`/project/${project.id}/placement`)
+    await agent.delete(`/placement/project/${project.id}`)
         .send([
             placement2.id // delete placement, not request!
         ])
