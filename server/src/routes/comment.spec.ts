@@ -45,7 +45,7 @@ test('read comments for project', async () => {
                 }
             ]
         }])
-})
+}, 10000)
 
 test('read comments for user', async () => {
     const creator = await getAndInsertNewUser()
@@ -63,7 +63,7 @@ test('read comments for user', async () => {
 
     expect(new Set(JSON.parse(text)))
         .toEqual(new Set(comments))
-})
+}, 10000)
 
 test('create comment', async () => {
     const creator = await getAndInsertNewUser()
@@ -98,4 +98,4 @@ test('create comment', async () => {
             projectId: project.id,
             parentCommentId: comment1.id,
         })
-})
+}, 10000)
