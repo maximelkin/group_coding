@@ -1,8 +1,5 @@
 import * as joi from 'joi'
-
-const usernameRe = /^[a-z\d_\-]{1,12}$/
-
-const joiUsername = joi.string().regex(usernameRe)
+import {joiUsername} from './common'
 
 const password = joi.string().min(3).max(50)
 export const userValidator = {

@@ -2,6 +2,7 @@ import {Column, Entity, PrimaryColumn, OneToMany} from 'typeorm'
 import {Project} from './Project'
 import {Placement} from './Placement'
 import {ParticipationRequest} from './ParticipationRequest'
+import {Comment} from './Comment'
 
 @Entity()
 export class User {
@@ -28,4 +29,7 @@ export class User {
 
     @OneToMany(() => ParticipationRequest, participationRequest => participationRequest.user)
     public participationRequests: ParticipationRequest[]
+
+    @OneToMany(() => Comment, comment => comment.author)
+    public comments: Comment[]
 }
