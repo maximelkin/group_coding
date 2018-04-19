@@ -1,24 +1,25 @@
 import * as joi from 'joi'
-import {joiEntityId, joiEntityIdAsString, joiUsername} from './common'
+import {joiEntityId, joiEntityIdAsString, joiPagination, joiUsername} from './common'
 
 export const commentValidator = {
     readByProject: {
         params: joi.object({
-            projectId: joiEntityIdAsString
+            projectId: joiEntityIdAsString.required()
         })
     },
     readByUser: {
         params: joi.object({
-            username: joiUsername
-        })
+            username: joiUsername.required(),
+        }),
+        query: joi.object(joiPagination),
     },
     create: {
         params: joi.object({
-            projectId: joiEntityIdAsString
+            projectId: joiEntityIdAsString.required()
         }),
         body: joi.object({
-            message: joi.string().max(3000),
-            parentCommentId: joiEntityId,
+            message: joi.string().max(3000).required(),
+            parentCommentId: [joiEntityId, null],
         })
     }
 }
