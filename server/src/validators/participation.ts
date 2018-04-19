@@ -1,10 +1,10 @@
 import * as joi from 'joi'
-import {joiEntityId, joiEntityIdAsString} from './common'
+import {joiEntityIdAsString} from './common'
 
 export const participationValidator = {
     create: {
-        body: joi.object({
-            placementId: joiEntityId,
+        params: joi.object({
+            placementId: joiEntityIdAsString,
         }),
     },
     delete: {

@@ -5,7 +5,7 @@ import validate = require('koa-joi-validate')
 
 // include in /project/:projectId/...
 export const placementRouter = new Router()
-    .prefix('/project/:projectId/placement')
+    .prefix('/placement/project/:projectId')
     .use(async (ctx, next) => {
         if (!ctx.isAuthenticated()) {
             return ctx.throw(401)

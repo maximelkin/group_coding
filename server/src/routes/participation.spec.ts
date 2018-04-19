@@ -11,7 +11,7 @@ import {getAndInsertNewParticipationRequest} from '../test_helpers/participation
 
 test('not authenticated', async () => {
     const agent = supertest.agent(app.callback())
-    await agent.post('/participation')
+    await agent.post('/participation/placement/1')
         .expect(401)
 
     await agent.delete('/participation/1')
@@ -26,10 +26,7 @@ test('create participation', async () => {
 
     const project = await getAndInsertNewProject(creator)
     const placement = await getAndInsertNewPlacement(project)
-    const response = await agent.post('/participation')
-        .send({
-            placementId: placement.id,
-        })
+    const response = await agent.post(`/participation/placement/${placement.id}`)
         .set('Cookie', cookie)
         .expect(200)
 
