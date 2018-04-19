@@ -17,7 +17,7 @@ export const commentRouter = new Router()
         validate(commentValidator.readByUser),
         async ctx => {
             const {username} = ctx.params
-            let {limit, offset} = ctx.params
+            let {limit, offset} = ctx.query
             limit = limit && parseInt(limit, 10) || 30
             offset = offset && parseInt(offset, 10) || 0
 

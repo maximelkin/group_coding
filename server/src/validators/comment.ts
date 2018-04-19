@@ -10,8 +10,8 @@ export const commentValidator = {
     readByUser: {
         params: joi.object({
             username: joiUsername.required(),
-            ...joiPagination,
-        })
+        }),
+        query: joi.object(joiPagination),
     },
     create: {
         params: joi.object({
