@@ -5,6 +5,7 @@ import {projectRouter} from './routes/project'
 import {participationRouter} from './routes/participation'
 import {placementRouter} from './routes/placement'
 import {searchRouter} from './routes/search'
+import {commentRouter} from './routes/comment'
 
 export const router = new Router()
     .use(authenticationRouter.routes(), authenticationRouter.allowedMethods())
@@ -13,3 +14,4 @@ export const router = new Router()
     .use(participationRouter.routes(), participationRouter.allowedMethods())
     .use(placementRouter.routes(), placementRouter.allowedMethods())
     .use(searchRouter.routes(), searchRouter.allowedMethods())
+    .use(commentRouter.routes(), commentRouter.allowedMethods())

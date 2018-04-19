@@ -1,6 +1,7 @@
 import {Column, Entity, PrimaryGeneratedColumn, ManyToOne, OneToMany, JoinColumn} from 'typeorm'
 import {User} from './User'
 import {Placement} from './Placement'
+import {Comment} from './Comment'
 
 @Entity()
 export class Project {
@@ -20,6 +21,9 @@ export class Project {
     @ManyToOne(() => User, creator => creator.createdProjects)
     @JoinColumn({name: 'creatorUsername'})
     public creator: User
+
+    @OneToMany(() => Comment, comment => comment.project)
+    public comments: Comment[]
 
     @OneToMany(() => Placement, placement => placement.project, {
         cascadeInsert: true,
