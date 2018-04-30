@@ -36,7 +36,7 @@ export const userController = { // за проезд передаем!
         }
 
         ctx.body = await getRepository(User)
-            .findOneById(username, {
+            .findOne(username, {
                 select: selectColumns,
                 relations
             })

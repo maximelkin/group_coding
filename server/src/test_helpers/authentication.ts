@@ -2,7 +2,7 @@ import {SuperTest, Test} from 'supertest'
 
 export async function getCookies<T extends { username: string, password: string }>
 (agent: SuperTest<Test>, {username, password}: T) {
-    const res = await agent
+    const res: any = await agent
         .post('/authentication/local')
         .type('json')
         .send({
@@ -10,7 +10,11 @@ export async function getCookies<T extends { username: string, password: string 
             password,
         })
 
+    const cookies = (res.headers['set-cookie'][0] as string)
+        .split(',')
+        .map(item => item.split(';')[0])
+        .filter(item => item.includes('='))
+
     // @ts-ignore
-    const cookies = res.headers['set-cookie'][0].split(',').map(item => item.split(';')[0])
-    return cookies.join(';')
+    agent.jar.setCookies(cookies)
 }

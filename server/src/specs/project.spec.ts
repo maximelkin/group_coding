@@ -39,12 +39,12 @@ test('create project non authorized', async () => {
 test('create project', async () => {
     const user = await getAndInsertNewUser()
     const agent = supertest.agent(app.callback())
-    const cookie = await getCookies(agent, user)
+    await getCookies(agent, user)
 
     const projectStub = getNewProjectStub()
 
     await agent.post('/project')
-        .set('Cookie', cookie)
+
         .send(projectStub)
         .expect(200)
         .expect(/^\d+$/)
@@ -66,18 +66,18 @@ test('update project non authorized', async () => {
 test('update project', async () => {
     const user = await getAndInsertNewUser()
     const agent = supertest.agent(app.callback())
-    const cookie = await getCookies(agent, user)
+    await getCookies(agent, user)
 
     const projectBefore = await getAndInsertNewProject(user)
 
     const projectUpdate = getNewProjectStub()
 
     await agent.put(`/project/${projectBefore.id}`)
-        .set('Cookie', cookie)
+
         .send(projectUpdate)
         .expect(200)
 
-    const updatedProject = await getRepository(Project).findOneById(projectBefore.id)
+    const updatedProject = await getRepository(Project).findOne(projectBefore.id)
     expect(updatedProject).toEqual({
         ...projectUpdate,
         id: projectBefore.id,
@@ -98,14 +98,14 @@ test('delete project not authorized', async () => {
 test('delete project', async () => {
     const user = await getAndInsertNewUser()
     const agent = supertest.agent(app.callback())
-    const cookie = await getCookies(agent, user)
+    await getCookies(agent, user)
 
     const projectBefore = await getAndInsertNewProject(user)
 
     await agent.delete(`/project/${projectBefore.id}`)
-        .set('Cookie', cookie)
+
         .expect(200)
 
-    const updatedProject = await getRepository(Project).findOneById(projectBefore.id)
+    const updatedProject = await getRepository(Project).findOne(projectBefore.id)
     expect(updatedProject).toBeUndefined()
 })

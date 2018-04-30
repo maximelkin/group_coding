@@ -23,7 +23,7 @@ export const projectController = {
     async read(ctx: Context, user: User | undefined, projectId: number) {
         const projectRepository = getRepository(Project)
 
-        let project = await projectRepository.findOneById(projectId, {
+        let project = await projectRepository.findOne(projectId, {
             relations: ['placements']
         })
 
@@ -33,7 +33,7 @@ export const projectController = {
 
         if (user && project.creatorUsername === user.username) {
             // if project creator - add participation requests
-            project = await projectRepository.findOneById(projectId, {
+            project = await projectRepository.findOne(projectId, {
                 relations: ['placements', 'placements.participationRequests']
             })
         }
@@ -43,7 +43,7 @@ export const projectController = {
     async update(ctx: Context, user: User, projectId: number, {header, text}: { header?: string, text?: string }) {
         const projectRepository = getRepository(Project)
         const project = await projectRepository
-            .findOneById(projectId)
+            .findOne(projectId)
 
         if (!project) {
             return ctx.throw(404)
@@ -62,7 +62,7 @@ export const projectController = {
     async delete(ctx: Context, user: User, projectId: number) {
         const projectsRepository = getRepository(Project)
         const project = await projectsRepository
-            .findOneById(projectId)
+            .findOne(projectId)
 
         if (!project) {
             return ctx.throw(404)
@@ -72,7 +72,7 @@ export const projectController = {
             return ctx.throw(403, 'not creator of project')
         }
 
-        await projectsRepository.deleteById(project.id)
+        await projectsRepository.delete(project.id)
 
         ctx.status = 200
     }

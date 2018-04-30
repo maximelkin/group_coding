@@ -48,11 +48,10 @@ test('read user authenticated', async () => {
     const user = await getAndInsertNewUser()
     const agent = supertest.agent(app.callback())
 
-    const cookie = await getCookies(agent, user)
+    await getCookies(agent, user)
 
-    await supertest.agent(app.callback())
+    await agent
         .get(`/user/${user.username}`)
-        .set('Cookie', cookie)
         .expect(200, {
             username: user.username,
             body: user.body,
@@ -79,12 +78,11 @@ test('update user', async () => {
 
     const agent = supertest.agent(app.callback())
 
-    const cookie = await getCookies(agent, user)
+    await getCookies(agent, user)
 
     await agent
         .put('/user/')
         .type('json')
-        .set('Cookie', cookie)
         .send({
             password: user.password + '_1',
             email: 'ra@emial.aaa',
@@ -93,7 +91,7 @@ test('update user', async () => {
         .expect(200)
 
     const userAfterUpdate = await getRepository(User)
-        .findOneById(user.username)
+        .findOne(user.username)
 
     if (!userAfterUpdate) {
         return expect(userAfterUpdate).toBeTruthy()

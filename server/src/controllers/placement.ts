@@ -17,7 +17,7 @@ export const placementController = {
         const projectRepository = getRepository(Project)
 
         const project = await projectRepository
-            .findOneById(projectId, {
+            .findOne(projectId, {
                 relations: ['placements']
             })
         if (!project) {
@@ -55,7 +55,7 @@ export const placementController = {
                 relations = ['participationRequests', 'participationRequests.user']
             }
             const placement = await placementRepository
-                .findOneById(id, {
+                .findOne(id, {
                     relations
                 })
 
@@ -103,8 +103,8 @@ export const placementController = {
         const projectRepository = getRepository(Project)
 
         const project = await projectRepository
-            .findOneById(projectId, {
-                relations: ['placements', 'placements.participationRequests']
+            .findOne(projectId, {
+                relations: ['placements']
             })
 
         if (!project) {
@@ -121,13 +121,14 @@ export const placementController = {
 
         await getManager()
             .transaction(async entityManger => {
-                for (const {participationRequests} of placementsForRemove) {
-                    await entityManger.getRepository(ParticipationRequest)
-                        .remove(participationRequests)
+                const participationRequestRepository = entityManger.getRepository(ParticipationRequest)
+                for (const {id} of placementsForRemove) {
+                    await participationRequestRepository
+                        .delete({placementId: id})
                 }
 
                 await entityManger.getRepository(Placement)
-                    .remove(placementsForRemove)
+                    .delete(placementsForRemove.map(placement => placement.id))
             })
         ctx.status = 200
     }

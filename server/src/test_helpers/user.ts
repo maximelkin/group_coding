@@ -28,7 +28,7 @@ export async function getAndInsertNewUser(): Promise<User> {
         ...user,
         password: await hash(user.password, 12)
     })
-    const foundUser = (await userRepository.findOneById(user.username))!
+    const foundUser = (await userRepository.findOne(user.username))!
     foundUser.password = user.password
     return foundUser
 }

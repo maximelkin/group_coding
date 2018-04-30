@@ -22,17 +22,17 @@ test('create participation', async () => {
     const user = await getAndInsertNewUser()
     const creator = await getAndInsertNewUser()
     const agent = supertest.agent(app.callback())
-    const cookie = await getCookies(agent, user)
+    await getCookies(agent, user)
 
     const project = await getAndInsertNewProject(creator)
     const placement = await getAndInsertNewPlacement(project)
     const response = await agent.post(`/participation/placement/${placement.id}`)
-        .set('Cookie', cookie)
+
         .expect(200)
 
     const participationId = parseInt(response.text, 10)
     const participationRequest = await getRepository(ParticipationRequest)
-        .findOneById(participationId)
+        .findOne(participationId)
 
     expect(participationRequest).toEqual({
         id: participationId,
@@ -46,7 +46,7 @@ test('delete participation', async () => {
     const user = await getAndInsertNewUser()
     const creator = await getAndInsertNewUser()
     const agent = supertest.agent(app.callback())
-    const cookie = await getCookies(agent, user)
+    await getCookies(agent, user)
 
     const project = await getAndInsertNewProject(creator)
     const placement = await getAndInsertNewPlacement(project)
@@ -54,9 +54,9 @@ test('delete participation', async () => {
     const participationRequest = await getAndInsertNewParticipationRequest(placement, user)
 
     await agent.delete(`/participation/${participationRequest.id}`)
-        .set('Cookie', cookie)
+
         .expect(200)
 
     expect(await getRepository(ParticipationRequest)
-        .findOneById(participationRequest.id)).toBeUndefined()
+        .findOne(participationRequest.id)).toBeUndefined()
 })

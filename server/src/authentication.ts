@@ -11,7 +11,7 @@ passport.serializeUser((user: User, done) => {
 passport.deserializeUser(async (username, done) => {
     try {
         const userRepository = getRepository(User)
-        const user = await userRepository.findOneById(username)
+        const user = await userRepository.findOne(username)
         done(null, user)
     } catch (e) {
         console.error(e)
@@ -26,7 +26,7 @@ passport.use(new local.Strategy({
     try {
         const userRepository = getRepository(User)
 
-        const user = await userRepository.findOneById(username)
+        const user = await userRepository.findOne(username)
 
         if (!user) {
             return done(null, false)

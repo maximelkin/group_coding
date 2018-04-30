@@ -77,10 +77,9 @@ test('create comment', async () => {
 
     const agent = supertest.agent(app.callback())
 
-    const cookie = await getCookies(agent, commentator)
+    await getCookies(agent, commentator)
 
     const {text} = await agent.post(`/comment/project/${project.id}`)
-        .set('Cookie', cookie)
         .send({
             ...commentStub,
             parentCommentId: comment1.id,
@@ -88,7 +87,7 @@ test('create comment', async () => {
         .expect(200)
 
     const newId = JSON.parse(text)
-    const createdComment = await getRepository(Comment).findOneById(newId)
+    const createdComment = await getRepository(Comment).findOne(newId)
 
     expect(createdComment)
         .toEqual({
