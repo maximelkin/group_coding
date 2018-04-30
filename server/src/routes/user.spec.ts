@@ -93,7 +93,7 @@ test('update user', async () => {
         .expect(200)
 
     const userAfterUpdate = await getRepository(User)
-        .findOneById(user.username)
+        .findOne(user.username)
 
     if (!userAfterUpdate) {
         return expect(userAfterUpdate).toBeTruthy()

@@ -39,7 +39,7 @@ test('create placement', async () => {
         .expect(200)
 
     const projectAfterInsert = await getRepository(Project)
-        .findOneById(project.id, {relations: ['placements']})
+        .findOne(project.id, {relations: ['placements']})
 
     expect(projectAfterInsert).toBeTruthy()
 
@@ -103,7 +103,7 @@ test('update placements', async () => {
         .expect(200)
 
     const projectAfterInsert = await getRepository(Project)
-        .findOneById(project.id, {relations: ['placements', 'placements.participationRequests']})
+        .findOne(project.id, {relations: ['placements', 'placements.participationRequests']})
 
     if (!projectAfterInsert) {
         return expect(projectAfterInsert).toBeTruthy()
@@ -184,12 +184,12 @@ test('delete placements', async () => {
         .set('Cookie', cookie)
         .expect(200)
 
-    const simpleUserAfter = await getRepository(User).findOneById(simpleUser.username, {
+    const simpleUserAfter = await getRepository(User).findOne(simpleUser.username, {
         relations: ['participationRequests']
     })
 
     const projectAfterInsert = await getRepository(Project)
-        .findOneById(project.id, {relations: ['placements', 'placements.participationRequests']})
+        .findOne(project.id, {relations: ['placements', 'placements.participationRequests']})
 
     if (!projectAfterInsert) {
         return expect(projectAfterInsert).toBeTruthy()

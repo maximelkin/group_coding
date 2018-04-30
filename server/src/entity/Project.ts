@@ -26,8 +26,7 @@ export class Project {
     public comments: Comment[]
 
     @OneToMany(() => Placement, placement => placement.project, {
-        cascadeInsert: true,
-        cascadeUpdate: true,
+        cascade: true
     })
     public placements: Placement[]
 }

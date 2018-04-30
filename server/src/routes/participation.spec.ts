@@ -32,7 +32,7 @@ test('create participation', async () => {
 
     const participationId = parseInt(response.text, 10)
     const participationRequest = await getRepository(ParticipationRequest)
-        .findOneById(participationId)
+        .findOne(participationId)
 
     expect(participationRequest).toEqual({
         id: participationId,
@@ -58,5 +58,5 @@ test('delete participation', async () => {
         .expect(200)
 
     expect(await getRepository(ParticipationRequest)
-        .findOneById(participationRequest.id)).toBeUndefined()
+        .findOne(participationRequest.id)).toBeUndefined()
 })

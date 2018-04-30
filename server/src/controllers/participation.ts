@@ -9,7 +9,7 @@ export const participationController = {
     async create(ctx: Context, placementId: number, user: User) {
 
         const placement = await getRepository(Placement)
-            .findOneById(placementId)
+            .findOne(placementId)
 
         if (!placement) {
             return ctx.throw(404, `placement not found: ${placementId}`)
@@ -27,7 +27,7 @@ export const participationController = {
 
     async delete(ctx: Context, participationRequestId: number, user: User) {
         const participationRequest = await getRepository(ParticipationRequest)
-            .findOneById(participationRequestId)
+            .findOne(participationRequestId)
 
         if (!participationRequest) {
             return ctx.throw(404)

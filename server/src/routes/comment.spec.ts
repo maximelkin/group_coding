@@ -88,7 +88,7 @@ test('create comment', async () => {
         .expect(200)
 
     const newId = JSON.parse(text)
-    const createdComment = await getRepository(Comment).findOneById(newId)
+    const createdComment = await getRepository(Comment).findOne(newId)
 
     expect(createdComment)
         .toEqual({

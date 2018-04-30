@@ -77,7 +77,7 @@ test('update project', async () => {
         .send(projectUpdate)
         .expect(200)
 
-    const updatedProject = await getRepository(Project).findOneById(projectBefore.id)
+    const updatedProject = await getRepository(Project).findOne(projectBefore.id)
     expect(updatedProject).toEqual({
         ...projectUpdate,
         id: projectBefore.id,
@@ -106,6 +106,6 @@ test('delete project', async () => {
         .set('Cookie', cookie)
         .expect(200)
 
-    const updatedProject = await getRepository(Project).findOneById(projectBefore.id)
+    const updatedProject = await getRepository(Project).findOne(projectBefore.id)
     expect(updatedProject).toBeUndefined()
 })

@@ -17,7 +17,7 @@ export const placementController = {
         const projectRepository = getRepository(Project)
 
         const project = await projectRepository
-            .findOneById(projectId, {
+            .findOne(projectId, {
                 relations: ['placements']
             })
         if (!project) {
@@ -55,7 +55,7 @@ export const placementController = {
                 relations = ['participationRequests', 'participationRequests.user']
             }
             const placement = await placementRepository
-                .findOneById(id, {
+                .findOne(id, {
                     relations
                 })
 
@@ -103,7 +103,7 @@ export const placementController = {
         const projectRepository = getRepository(Project)
 
         const project = await projectRepository
-            .findOneById(projectId, {
+            .findOne(projectId, {
                 relations: ['placements', 'placements.participationRequests']
             })
 
