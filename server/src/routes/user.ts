@@ -10,7 +10,7 @@ export const userRouter = new Router()
         async ctx => {
             const {username} = ctx.params
 
-            await userController.read(ctx, ctx.state.user!, username)
+            await userController.read(ctx, ctx.state.user, username)
         })
     .post('/',
         validate(userValidator.create),

@@ -26,7 +26,7 @@ test('create placement', async () => {
     const creator = await getAndInsertNewUser()
 
     const agent = supertest.agent(app.callback())
-    const cookie = await getCookies(agent, creator)
+    await getCookies(agent, creator)
 
     const project = await getAndInsertNewProject(creator)
 
@@ -35,7 +35,7 @@ test('create placement', async () => {
             'aaa',
             'bbb',
         ])
-        .set('Cookie', cookie)
+
         .expect(200)
 
     const projectAfterInsert = await getRepository(Project)
@@ -73,7 +73,7 @@ test('update placements', async () => {
     const simpleUser = await getAndInsertNewUser()
 
     const agent = supertest.agent(app.callback())
-    const cookie = await getCookies(agent, creator)
+    await getCookies(agent, creator)
 
     const project = await getAndInsertNewProject(creator)
     const placement1 = await getAndInsertNewPlacement(project)
@@ -99,7 +99,7 @@ test('update placements', async () => {
                 decline: [placement3Request.id],
             },
         ])
-        .set('Cookie', cookie)
+
         .expect(200)
 
     const projectAfterInsert = await getRepository(Project)
@@ -168,7 +168,7 @@ test('delete placements', async () => {
     const simpleUser = await getAndInsertNewUser()
 
     const agent = supertest.agent(app.callback())
-    const cookie = await getCookies(agent, creator)
+    await getCookies(agent, creator)
 
     const project = await getAndInsertNewProject(creator)
     const placement1 = await getAndInsertNewPlacement(project)
@@ -181,7 +181,7 @@ test('delete placements', async () => {
         .send([
             placement2.id // delete placement, not request!
         ])
-        .set('Cookie', cookie)
+
         .expect(200)
 
     const simpleUserAfter = await getRepository(User).findOne(simpleUser.username, {

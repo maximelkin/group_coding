@@ -47,7 +47,7 @@ export class Placement {
     public user: User | null
 
     @OneToMany(() => ParticipationRequest, participationRequest => participationRequest.placement, {
-        cascade: true,
+        cascade: ['insert', 'update'],
     })
     public participationRequests: ParticipationRequest[]
 }
