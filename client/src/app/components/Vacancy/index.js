@@ -1,0 +1,4 @@
+/*  VACANCY
+*   hover || disable || active
+*   
+*/
