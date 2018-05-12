@@ -22,7 +22,6 @@
     "moduleFileExtensions": [
       "ts",
       "tsx",
-      "js",
       "json",
       "node"
     ],
@@ -38,7 +37,7 @@
   "dependencies": {
     "bcryptjs": "~2.4.3",
     "bluebird": "~3.5.1",
-    "joi": "~13.2.0",
+    "joi": "^13.3.0",
     "koa": "~2.5.1",
     "koa-bodyparser": "~4.2.0",
     "koa-joi-validate": "~0.5.1",
@@ -47,10 +46,10 @@
     "koa-router": "~7.4.0",
     "koa-session": "~5.8.1",
     "passport-local": "~1.0.0",
-    "pg": "~7.4.1",
+    "pg": "~7.4.3",
     "reflect-metadata": "~0.1.12",
-    "ts-node": "~6.0.2",
-    "typeorm": "~0.2.4",
+    "ts-node": "~6.0.3",
+    "typeorm": "~0.2.5",
     "typescript": "^2.8.3"
   },
   "devDependencies": {
@@ -64,12 +63,12 @@
     "@types/koa-passport": "^4.0.1",
     "@types/koa-router": "^7.0.28",
     "@types/koa-session": "^5.7.3",
-    "@types/node": "^10.0.0",
+    "@types/node": "^10.0.8",
     "@types/passport-local": "^1.0.33",
     "@types/supertest": "^2.0.4",
     "jest": "~22.4.3",
     "supertest": "~3.0.0",
-    "ts-jest": "~22.4.4",
-    "tslint": "^5.9.1"
+    "ts-jest": "~22.4.6",
+    "tslint": "^5.10.0"
   }
 }
