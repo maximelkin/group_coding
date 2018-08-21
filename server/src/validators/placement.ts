@@ -2,9 +2,9 @@ import {joiEntityId, joiEntityIdAsString} from './common'
 import * as joi from 'joi'
 
 const commonPart = {
-    params: {
+    params: joi.object({
         projectId: joiEntityIdAsString,
-    }
+    })
 }
 
 const maxPlacements = 40

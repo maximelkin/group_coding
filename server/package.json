@@ -18,6 +18,11 @@
     "transform": {
       "^.+\\.tsx?$": "ts-jest"
     },
+    "globals": {
+      "ts-jest": {
+        "skipBabel": true
+      }
+    },
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.ts$",
     "moduleFileExtensions": [
       "ts",
@@ -30,46 +35,46 @@
     "globalTeardown": "./src/test_helpers/clearDatabase.js"
   },
   "scripts": {
-    "start": "ts-node src/index.ts",
+    "prestart": "npm run build",
+    "start": "node dist/index.js",
     "build": "tsc -p ./tsconfig.json",
     "lint": "tslint -p ./tsconfig.json",
     "test": "jest"
   },
   "dependencies": {
     "bcryptjs": "~2.4.3",
-    "bluebird": "~3.5.1",
-    "joi": "^13.3.0",
-    "koa": "~2.5.1",
-    "koa-bodyparser": "~4.2.0",
-    "koa-joi-validate": "~0.5.1",
+    "joi": "^13.6.0",
+    "koa": "~2.5.2",
+    "koa-bodyparser": "~4.2.1",
     "koa-logger": "~3.2.0",
-    "koa-passport": "~4.0.1",
+    "koa-passport": "~4.1.0",
     "koa-router": "~7.4.0",
-    "koa-session": "~5.8.1",
+    "koa-session": "~5.8.2",
     "passport-local": "~1.0.0",
     "pg": "~7.4.3",
     "reflect-metadata": "~0.1.12",
-    "ts-node": "~6.0.3",
-    "typeorm": "~0.2.5",
-    "typescript": "^2.8.3"
+    "typeorm": "~0.2.7",
+    "tslib": "~1.9.3",
+    "typescript": "^3.0.1"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.1",
-    "@types/bluebird": "^3.5.20",
-    "@types/jest": "^22.2.3",
-    "@types/joi": "^13.0.8",
-    "@types/koa": "^2.0.45",
-    "@types/koa-bodyparser": "^4.2.0",
+    "@types/bluebird": "^3.5.23",
+    "@types/jest": "^23.3.1",
+    "@types/joi": "^13.4.3",
+    "@types/koa": "^2.0.46",
+    "@types/koa-bodyparser": "^5.0.1",
     "@types/koa-logger": "^3.1.0",
     "@types/koa-passport": "^4.0.1",
-    "@types/koa-router": "^7.0.28",
-    "@types/koa-session": "^5.7.3",
-    "@types/node": "^10.0.8",
+    "@types/koa-router": "^7.0.31",
+    "@types/koa-session": "^5.7.4",
+    "@types/node": "^10.7.1",
     "@types/passport-local": "^1.0.33",
-    "@types/supertest": "^2.0.4",
-    "jest": "~22.4.3",
-    "supertest": "~3.0.0",
-    "ts-jest": "~22.4.6",
-    "tslint": "^5.10.0"
+    "@types/supertest": "^2.0.5",
+    "jest": "~23.5.0",
+    "supertest": "~3.1.0",
+    "ts-node": "~7.0.1",
+    "ts-jest": "~23.1.4",
+    "tslint": "^5.11.0"
   }
 }

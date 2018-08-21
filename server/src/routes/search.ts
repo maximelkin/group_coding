@@ -1,12 +1,12 @@
 import * as Router from 'koa-router'
 import {searchController} from '../controllers/search'
 import {searchValidator} from '../validators/search'
-import validate = require('koa-joi-validate')
+import {validateMiddleware} from '../helpers'
 
 export const searchRouter = new Router()
     .prefix('/search')
     .get('/placements',
-        validate(searchValidator.placements),
+        validateMiddleware(searchValidator.placements),
         async ctx => {
             // tslint:disable
             let {limit, offset, direction, ...conditions} = ctx.query

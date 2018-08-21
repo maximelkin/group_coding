@@ -1,21 +1,21 @@
 import * as Router from 'koa-router'
 import {userController} from '../controllers/user'
 import {userValidator} from '../validators/user'
-import validate = require('koa-joi-validate')
+import {validateMiddleware} from '../helpers'
 
 export const userRouter = new Router()
     .prefix('/user')
     .get('/:username',
-        validate(userValidator.read),
+        validateMiddleware(userValidator.read),
         async ctx => {
             const {username} = ctx.params
 
             await userController.read(ctx, ctx.state.user, username)
         })
     .post('/',
-        validate(userValidator.create),
+        validateMiddleware(userValidator.create),
         async ctx => {
-            const {username, password} = ctx.request.body
+            const {username, password} = ctx.request.body as any
 
             await userController.create(ctx, username, password)
         })
@@ -26,10 +26,10 @@ export const userRouter = new Router()
         await next()
     })
     .put('/',
-        validate(userValidator.update),
+        validateMiddleware(userValidator.update),
 
         async ctx => {
-            const {password, body, email} = ctx.request.body
+            const {password, body, email} = ctx.request.body as any
 
             await userController.update(ctx, ctx.state.user!, {password, body, email})
         }
