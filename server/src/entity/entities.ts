@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import {Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn, PrimaryGeneratedColumn} from 'typeorm'
 
 // group in one file because of circular dependencies

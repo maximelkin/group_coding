@@ -17,7 +17,6 @@ function validateObject(object: any = {}, label: string, schema: Schema, options
     }
 }
 
-
 export function validateMiddleware({headers, body, params, query}: {
     headers?: Schema,
     query?: Schema,
@@ -32,8 +31,7 @@ export function validateMiddleware({headers, body, params, query}: {
             validateObject(ctx.params, 'URL Parameters', params, {})
             validateObject(ctx.query, 'URL Query', query, {})
 
-            if (ctx.request.body)
-                validateObject(ctx.request.body, 'Request Body', body, {})
+            validateObject(ctx.request.body, 'Request Body', body, {})
 
             return next()
         } catch (err) {
