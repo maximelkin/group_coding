@@ -1,6 +1,15 @@
 {
   "extends": "tslint:latest",
-  "jsRules": {},
+  "jsRules": {
+    "quotemark": [
+      true,
+      "single"
+    ],
+    "semicolon": [
+      true,
+      "never"
+    ]
+  },
   "rules": {
     "arrow-parens": false,
     "no-import-side-effect": false,
@@ -18,7 +27,9 @@
     "object-literal-sort-keys": false,
     "space-before-function-paren": false,
     "no-var-requires": false,
-    "no-console": false
+    "no-console": false,
+    "no-implicit-dependencies": [true, "dev"],
+    "no-empty-interface": false
   },
   "rulesDirectory": []
 }

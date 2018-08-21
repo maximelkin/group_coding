@@ -1,17 +1,13 @@
-import Koa = require('koa')
-import koaPassport = require('koa-passport')
-import bodyParser = require('koa-bodyparser')
-import session = require('koa-session')
-import config = require('../config.json')
-import {router} from './routers'
+import 'reflect-metadata'
 
-const app = new Koa()
+import {app} from './app'
+import {createConnection} from 'typeorm'
 
-app.keys = [config.token]
-app
-    .use(bodyParser())
-    .use(session(app))
-    .use(koaPassport.initialize())
-    .use(koaPassport.session())
-    .use(router.routes())
-    .use(router.allowedMethods())
+createConnection()
+    .then(async () => {
+        app.listen(process.env.PORT || 8080)
+    })
+    .catch(error => {
+        console.error(error)
+        process.exit(-1)
+    })

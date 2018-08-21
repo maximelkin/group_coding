@@ -1,12 +1,16 @@
 FROM node:alpine
 
-COPY package*.json ./
-RUN npm ci
+WORKDIR /home/node/synergy
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile --no-cache
 
 COPY . .
-RUN npm run build
+# replace ormconfig with special version for docker
+COPY docker-ormconfig.json ./ormconfig.json
 
 ENV NODE_ENV=production
-USER node
+ENV PORT=8080
 
-CMD ["npm", "start"]
+EXPOSE 8080
+
+CMD ["yarn", "start", "--no-cache"]
