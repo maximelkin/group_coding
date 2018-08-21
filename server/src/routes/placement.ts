@@ -1,7 +1,7 @@
 import * as Router from 'koa-router'
 import {placementController, PlacementUpdate} from '../controllers/placement'
 import {placementValidator} from '../validators/placement'
-import validate = require('koa-joi-validate')
+import {validateMiddleware} from '../helpers'
 
 // include in /project/:projectId/...
 export const placementRouter = new Router()
@@ -13,25 +13,25 @@ export const placementRouter = new Router()
         return next()
     })
     .post('/',
-        validate(placementValidator.create),
+        validateMiddleware(placementValidator.create),
         async ctx => {
-            const placements: string[] = ctx.request.body
+            const placements: string[] = ctx.request.body as any
             const projectId = parseInt(ctx.params.projectId, 10)
 
             await placementController.create(ctx, ctx.state.user!, projectId, placements)
         })
     .put('/',
-        validate(placementValidator.update),
+        validateMiddleware(placementValidator.update),
         async ctx => {
-            const placementUpdates: PlacementUpdate[] = ctx.request.body
+            const placementUpdates: PlacementUpdate[] = ctx.request.body as any
             const projectId = parseInt(ctx.params.projectId, 10)
 
             await placementController.update(ctx, ctx.state.user!, projectId, placementUpdates)
         })
     .delete('/',
-        validate(placementValidator.delete),
+        validateMiddleware(placementValidator.delete),
         async ctx => {
-            const placements: number[] = ctx.request.body
+            const placements: number[] = ctx.request.body as any
             const projectId = parseInt(ctx.params.projectId, 10)
 
             await placementController.delete(ctx, ctx.state.user!, projectId, placements)

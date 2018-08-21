@@ -1,7 +1,7 @@
 import * as Router from 'koa-router'
 import {projectController} from '../controllers/project'
 import {projectValidator} from '../validators/project'
-import validate = require('koa-joi-validate')
+import {validateMiddleware} from '../helpers'
 
 const authenticatedProjectRouter = new Router()
     .use((ctx, next) => {
@@ -11,14 +11,14 @@ const authenticatedProjectRouter = new Router()
         return next()
     })
     .post('/',
-        validate(projectValidator.create),
+        validateMiddleware(projectValidator.create),
         async ctx => {
-            const {header, text} = ctx.request.body
+            const {header, text} = ctx.request.body as any
 
             await projectController.create(ctx, ctx.state.user!, {header, text})
         })
     .put('/:projectId',
-        validate(projectValidator.update),
+        validateMiddleware(projectValidator.update),
         async ctx => {
             const {header, text}: {
                 header?: string,
@@ -31,7 +31,7 @@ const authenticatedProjectRouter = new Router()
             await projectController.update(ctx, user, projectId, {header, text})
         })
     .delete('/:projectId',
-        validate(projectValidator.delete),
+        validateMiddleware(projectValidator.delete),
         async ctx => {
             const projectId = parseInt(ctx.params.projectId, 10)
 
@@ -41,7 +41,7 @@ const authenticatedProjectRouter = new Router()
 export const projectRouter = new Router()
     .prefix('/project')
     .get('/',
-        validate(projectValidator.readMany),
+        validateMiddleware(projectValidator.readMany),
         async ctx => {
             let {offset, limit} = ctx.request.query
             offset = offset && parseInt(offset, 10) || 0
@@ -50,7 +50,7 @@ export const projectRouter = new Router()
             await projectController.readMany(ctx, {offset, limit})
         })
     .get('/:projectId',
-        validate(projectValidator.readOne),
+        validateMiddleware(projectValidator.readOne),
         async ctx => {
             const projectId = parseInt(ctx.params.projectId, 10)
 

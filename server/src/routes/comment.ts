@@ -1,20 +1,20 @@
 import * as Router from 'koa-router'
 import {commentController} from '../controllers/comment'
-import validate = require('koa-joi-validate')
 import {commentValidator} from '../validators/comment'
+import {validateMiddleware} from '../helpers'
 
 export const commentRouter = new Router()
     .prefix('/comment')
 
     .get('/project/:projectId',
-        validate(commentValidator.readByProject),
+        validateMiddleware(commentValidator.readByProject),
         async ctx => {
             const {projectId} = ctx.params
             await commentController.readByProject(ctx, parseInt(projectId, 10))
         })
 
     .get('/user/:username',
-        validate(commentValidator.readByUser),
+        validateMiddleware(commentValidator.readByUser),
         async ctx => {
             const {username} = ctx.params
             let {limit, offset} = ctx.query
@@ -25,10 +25,10 @@ export const commentRouter = new Router()
         })
 
     .post('/project/:projectId',
-        validate(commentValidator.create),
+        validateMiddleware(commentValidator.create),
         async ctx => {
             const {projectId} = ctx.params
-            const {message, parentCommentId} = ctx.request.body
+            const {message, parentCommentId} = ctx.request.body as any
             const user = ctx.state.user
             if (!ctx.isAuthenticated()) {
                 return ctx.throw(401)

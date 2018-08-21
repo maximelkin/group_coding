@@ -9,7 +9,7 @@ const text = joi.string().max(maxTextLength)
 
 export const projectValidator = {
     readMany: {
-        query: joiPagination,
+        query: joi.object(joiPagination),
     },
     readOne: {
         params: joi.object({
