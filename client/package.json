@@ -8,17 +8,17 @@
     "name": "Ilya Komar0ff",
     "email": "binary.reptile@gmail.com"
   },
+
   "bugs": {
     "url": "https://github.com/maximelkin/synergyTeams/issues"
   },
-  "engines": {
-    "yarn": ">= 1.2.1"
-  },
+
   "scripts": {
-    "start": "cross-env NODE_ENV=development parcel src/assets/index.html --port 3000",
-    "build": "cross-env NODE_ENV=production parcel build src/assets/index.html --public-url /",
-    "test": "exit 1"
+    "dev": "webpack-dev-server --hot --progress --color --config config/webpack.dev.config.js",
+    "build": "webpack --mode production --progress --color --config config/webpack.prod.config.js",
+    "test": "jest"
   },
+
   "dependencies": {
     "emotion": "^9.1.0",
     "parcel-plugin-eslint": "^1.0.3",
@@ -28,6 +28,7 @@
     "react-redux": "^5.0.7",
     "redux": "^4.0.0-beta.2"
   },
+  
   "devDependencies": {
     "babel-eslint": "^8.2.2",
     "babel-preset-react-app": "^3.1.1",
