@@ -3,4 +3,4 @@
 *
 */
 
-import Vacancy from './Vacancy'
+import Vacancy from './Vacancy';

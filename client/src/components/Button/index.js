@@ -5,13 +5,13 @@
 *
 */
 
-import React from 'react'
-import styled from 'react-emotion'
+import React from 'react';
+import styled from 'react-emotion';
 
 const _button = styled('button')`
   display: flex;
   cursor: pointer;
-  background-color: #33A3CD;
+  background-color: #33a3cd;
 
   padding: 9px 70px;
   border-radius: 2px;
@@ -21,17 +21,17 @@ const _button = styled('button')`
   text-decoration: none;
 
   &:hover {
-    background-color: #3DB0DB;
+    background-color: #3db0db;
   }
-`
+`;
 const _content = styled('span')`
   color: white;
-`
+`;
 
-export const Button = ({text}) => {
-    return (
-      <_button type='submit'>
-        <_content> { text } </_content>
-      </ _button>
-    )
-}
+export const Button = ({ text }) => {
+  return (
+    <_button type="submit">
+      <_content> {text} </_content>
+    </_button>
+  );
+};

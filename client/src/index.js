@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { test } from './app'
+import { test } from './app';
 
 const App = () => (
   <div className="App">
