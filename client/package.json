@@ -16,6 +16,7 @@
   "scripts": {
     "dev": "webpack-dev-server --hot --progress --color --config config/webpack.dev.config.js",
     "build": "webpack --mode production --progress --color --config config/webpack.prod.config.js",
+    "format": "prettier --write \"src/**/*.js\"",
     "test": "jest"
   },
 
@@ -28,7 +29,7 @@
     "react-redux": "^5.0.7",
     "redux": "^4.0.0-beta.2"
   },
-  
+
   "devDependencies": {
     "babel-eslint": "^8.2.2",
     "babel-preset-react-app": "^3.1.1",
